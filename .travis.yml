@@ -26,4 +26,5 @@ install:
 # Run
 before_script:
 - ./gradlew clean assemble --stacktrace
+script:
 - ./gradlew test
