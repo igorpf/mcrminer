@@ -1,30 +1,22 @@
 language: java
 jdk:
-  - oraclejdk8
+- oraclejdk8
 sudo: required
-
 before_cache:
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+- rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
   directories:
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
-
-# Matrix with linux configuration using gcc 5 as this is the version on the production machines
+  - "$HOME/.gradle/caches/"
+  - "$HOME/.gradle/wrapper/"
 matrix:
   include:
   - os: linux
-
-#before_install:
-#- eval "${MATRIX_EVAL}"
-
-#
-install:
-#- sudo rm -rf /usr/local/cmake*
-
-# Run
+install: 
 before_script:
-- ./gradlew clean assemble --stacktrace
+- "./gradlew clean assemble --stacktrace"
 script:
-- ./gradlew test
+- "./gradlew test"
+env:
+  global:
+    secure: XOzplZlsOywXBf6hkWoZNd4HH1vbJe/3SdScOVvrPpImFQh76YNiY+zCnxRSyIPlkPNPC4iFtOT21OiRWDuPCzLZVoR4RX9sBnfaZXWVtldXo/4gfnEPe/8K7/4GklRsA05BK8GyoYjlFsj2ZIJuMXkjjvq+oT2vynEoxGl4YV5oohlMtPz5gMkcVyAEOMDMyPiZqnsyajZh3bVTWOPtgWA53eEA6zfejQAVbnELk3Pb9jRbx9zFsD7FrGu8Xu2rznvhs3xbYcTIrEr13uSpMy5g2p6CumHNh041NAzlIg/dOdaAUxkLLPnwcXVn2kD1LJkx5mVliw4ZBz5sMftkXhqwHdacrWjs6qIa/8RsJkq5/86Q0jYcKFgemOL1p51bNXR03UalE60jvCCLSmOhFh0sLRsxEBdgf4deVnIplpksPjwcH0W8867dgoVMY5JQK9sA1N4IfEJgnq9W5n7evsZ7/BZM7tHBOccACCCUON5MD6zKedRgEo7PrwozdGJPWJMVaz8BcxaVpy2m8FAuEW8PrKkfyxeKLGTS5yiERKB8BkSXbBWmhGIaJug/nz6N4NpB7HSIsaM9DQSeG47yL3M9zVfhWAwM/T0AliX0peB7ybKorodnrkt9S9d6uThey77LrNvpyjjXSnhPreEqnXwaeZmfdXD2yzIymashe1o=
