@@ -13,7 +13,6 @@ buildscript {
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:${sonarQubePluginVersion}"
 	}
 }
-
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
@@ -23,6 +22,8 @@ apply plugin: 'io.spring.dependency-management'
 group = 'com.mcrminer'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
+
+
 
 repositories {
 	mavenCentral()
