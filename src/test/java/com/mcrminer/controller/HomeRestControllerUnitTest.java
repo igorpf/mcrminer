@@ -6,20 +6,20 @@ import org.junit.Test;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.*;
 
-public class HomeControllerUnitTest
+public class HomeRestControllerUnitTest
 {
 
-    private HomeController homeController;
+    private HomeRestController homeRestController;
 
     @Before
     public void setUp()
     {
-        homeController = new HomeController();
+        homeRestController = new HomeRestController();
     }
 
     @Test
     public void test()
     {
-        assertThat(homeController.hello(), equalTo("hello"));
+        assertThat(homeRestController.hello(), equalTo("hello"));
     }
 }

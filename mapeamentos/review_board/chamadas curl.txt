@@ -1,0 +1,4 @@
+curl http://demo.reviewboard.org/api/ -H "Accept: application/json"
+
+Tem estatísticas sobre os diffs
+curl http://demo.reviewboard.org/api/review-requests/1337/diffs/1/files/ -H "Accept: application/json" > review.json

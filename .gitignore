@@ -24,3 +24,5 @@
 /dist/
 /nbdist/
 /.nb-gradle/
+
+mapeamentos/.~lock.*

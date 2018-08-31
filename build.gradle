@@ -35,6 +35,8 @@ dependencies {
 	}
 	compile('org.springframework.boot:spring-boot-starter-security')
 	compile('org.springframework.boot:spring-boot-starter-web')
+	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
+	compile('org.springframework.boot:spring-boot-devtools')
 	compile('com.h2database:h2')
     compile('com.zaxxer:HikariCP:2.5.1') {
         exclude group: 'org.hibernate', module: 'hibernate-core'

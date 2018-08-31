@@ -1,16 +1,14 @@
 package com.mcrminer.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 
-@RestController
-@RequestMapping("/home")
+@Controller
 public class HomeController
 {
-    @RequestMapping(method = RequestMethod.GET)
-    public String hello()
+    @GetMapping("/homepage")
+    public String home()
     {
-        return "hello";
+        return "home";
     }
 }
