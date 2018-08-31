@@ -1,2 +1,0 @@
-https://android-review.googlesource.com/q/status:open
-https://codereview.qt-project.org/#/q/status:open,n,z
