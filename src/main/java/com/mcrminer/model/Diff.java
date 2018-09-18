@@ -2,10 +2,10 @@ package com.mcrminer.model;
 
 import java.util.Set;
 
-public final class Diff extends BaseAuditingEntity {
+public final class Diff extends Reviewable {
 
     private Integer id;
-    private PullRequest pullRequest;
+    private ReviewRequest reviewRequest;
 
     private Set<File> files;
 }

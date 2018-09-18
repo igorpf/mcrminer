@@ -1,5 +1,5 @@
 package com.mcrminer.model.enums;
 
-public enum PullRequestStatus {
+public enum ReviewRequestStatus {
     MERGED, PENDING, REJECTED;
 }

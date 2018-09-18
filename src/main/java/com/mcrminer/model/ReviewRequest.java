@@ -1,10 +1,10 @@
 package com.mcrminer.model;
 
-import com.mcrminer.model.enums.PullRequestStatus;
+import com.mcrminer.model.enums.ReviewRequestStatus;
 
 import java.util.Set;
 
-public final class PullRequest extends BaseAuditingEntity {
+public final class ReviewRequest extends Reviewable {
 
     // Relations
     private User submitter;
@@ -17,7 +17,7 @@ public final class PullRequest extends BaseAuditingEntity {
     private String branch;
     private String commitId;
     private boolean isPublic;
-    private PullRequestStatus status;
+    private ReviewRequestStatus status;
     private String description;
 
 
