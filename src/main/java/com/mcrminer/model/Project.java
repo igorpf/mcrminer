@@ -5,6 +5,11 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
+@NamedEntityGraphs({
+    @NamedEntityGraph(name = "withReviewRequests", attributeNodes = {
+            @NamedAttributeNode("reviewRequests")
+    })
+})
 public final class Project {
 
     @Id
