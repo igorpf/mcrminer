@@ -1,8 +1,6 @@
 package com.mcrminer.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
 
@@ -15,7 +13,8 @@ public final class Project {
     private String urlPath;
     private String name;
 
-//    private Set<PullRequest> pullRequests;
+    @OneToMany
+    private Set<ReviewRequest> reviewRequests;
 
     public Project() {
     }
@@ -44,28 +43,25 @@ public final class Project {
         this.name = name;
     }
 
-//    public Set<PullRequest> getPullRequests() {
-//        return pullRequests;
-//    }
-//
-//    public void setPullRequests(Set<PullRequest> pullRequests) {
-//        this.pullRequests = pullRequests;
-//    }
+    public Set<ReviewRequest> getReviewRequests() {
+        return reviewRequests;
+    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
+    public void setReviewRequests(Set<ReviewRequest> reviewRequests) {
+        this.reviewRequests = reviewRequests;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == this)
-            return true;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Project)) return false;
+        Project project = (Project) o;
+        return Objects.equals(getId(), project.getId());
+    }
 
-        if (obj instanceof Project) {
-            Project other = (Project) obj;
-            return Objects.equals(id, other.id);
-        }
-        return false;
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(getId());
     }
 }
