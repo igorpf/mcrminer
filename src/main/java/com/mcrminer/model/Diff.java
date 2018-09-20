@@ -11,21 +11,30 @@ public final class Diff extends Reviewable {
     private ReviewRequest reviewRequest;
     @OneToMany
     private Set<Review> reviews;
-
     @OneToMany
     private Set<File> files;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Diff)) return false;
-        Diff diff = (Diff) o;
-        return Objects.equals(getId(), diff.getId());
+    public ReviewRequest getReviewRequest() {
+        return reviewRequest;
     }
 
-    @Override
-    public int hashCode() {
+    public void setReviewRequest(ReviewRequest reviewRequest) {
+        this.reviewRequest = reviewRequest;
+    }
 
-        return Objects.hash(getId());
+    public Set<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(Set<Review> reviews) {
+        this.reviews = reviews;
+    }
+
+    public Set<File> getFiles() {
+        return files;
+    }
+
+    public void setFiles(Set<File> files) {
+        this.files = files;
     }
 }

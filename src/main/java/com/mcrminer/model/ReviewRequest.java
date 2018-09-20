@@ -94,18 +94,4 @@ public final class ReviewRequest extends Reviewable {
     public void setDescription(String description) {
         this.description = description;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ReviewRequest)) return false;
-        ReviewRequest that = (ReviewRequest) o;
-        return Objects.equals(getId(), that.getId());
-    }
-
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(getId());
-    }
 }
