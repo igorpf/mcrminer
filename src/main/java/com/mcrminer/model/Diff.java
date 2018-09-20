@@ -1,6 +1,7 @@
 package com.mcrminer.model;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Set;
 
 @Entity
@@ -11,7 +12,7 @@ public final class Diff extends Reviewable {
     @OneToMany
     private Set<Review> reviews;
     @OneToMany
-    private Set<File> files;
+    private Collection<File> files;
 
     public ReviewRequest getReviewRequest() {
         return reviewRequest;
@@ -29,11 +30,11 @@ public final class Diff extends Reviewable {
         this.reviews = reviews;
     }
 
-    public Set<File> getFiles() {
+    public Collection<File> getFiles() {
         return files;
     }
 
-    public void setFiles(Set<File> files) {
+    public void setFiles(Collection<File> files) {
         this.files = files;
     }
 }

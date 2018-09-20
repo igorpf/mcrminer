@@ -3,8 +3,8 @@ package com.mcrminer.model;
 import com.mcrminer.model.enums.FileStatus;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Objects;
-import java.util.Set;
 
 @Entity
 public final class File {
@@ -15,7 +15,7 @@ public final class File {
     @ManyToOne
     private Diff diff;
     @OneToMany
-    private Set<Comment> comments;
+    private Collection<Comment> comments;
 
     private String newFilename;
     private String oldFilename; //if renamed
@@ -39,11 +39,11 @@ public final class File {
         this.diff = diff;
     }
 
-    public Set<Comment> getComments() {
+    public Collection<Comment> getComments() {
         return comments;
     }
 
-    public void setComments(Set<Comment> comments) {
+    public void setComments(Collection<Comment> comments) {
         this.comments = comments;
     }
 

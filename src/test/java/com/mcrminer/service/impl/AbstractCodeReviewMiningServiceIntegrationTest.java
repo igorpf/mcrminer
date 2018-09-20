@@ -15,9 +15,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
 
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -28,21 +27,20 @@ public class AbstractCodeReviewMiningServiceIntegrationTest {
     private CodeReviewMiningService codeReviewMiningService;
     @Autowired
     private ProjectRepository projectRepository;
-    private AuthenticationData authData;
+    private final AuthenticationData authData = new AuthenticationData() {
+        @Override
+        public String getUsername() {
+            return "";
+        }
+
+        @Override
+        public String getPassword() {
+            return "";
+        }
+    };
 
     @Before
     public void setUp() throws Exception {
-        authData = new AuthenticationData() {
-            @Override
-            public String getUsername() {
-                return "";
-            }
-
-            @Override
-            public String getPassword() {
-                return "";
-            }
-        };
     }
 
     @Test
