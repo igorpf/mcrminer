@@ -1,9 +1,6 @@
 package com.mcrminer.service.impl;
 
-import com.mcrminer.model.Comment;
-import com.mcrminer.model.Diff;
-import com.mcrminer.model.Project;
-import com.mcrminer.model.ReviewRequest;
+import com.mcrminer.model.*;
 import com.mcrminer.repository.*;
 import com.mcrminer.service.AuthenticationData;
 import com.mcrminer.service.CodeReviewMiningService;
@@ -26,25 +23,30 @@ public abstract class AbstractCodeReviewMiningService implements CodeReviewMinin
     private UserRepository userRepository;
     @Autowired
     private FileRepository fileRepository;
+    @Autowired
+    private ReviewRepository reviewRepository;
+    @Autowired
+    private ApprovalStatusRepository approvalStatusRepository;
 
     @Override
     public Project fetchProject(String host, String projectId, AuthenticationData authData) {
         Project project = getProject(host, projectId, authData);
         project = projectRepository.save(project);
         List<ReviewRequest> reviewRequests = getReviewRequestsForProject(project, authData);
-        for (ReviewRequest reviewRequest : reviewRequests) {
-            reviewRequest.setProject(project);
-            populateReviewRequest(reviewRequest, authData);
-            reviewRequestRepository.save(reviewRequest);
-        }
+        reviewRequests.forEach(reviewRequest -> saveReviewRequest(reviewRequest, authData));
         project.setReviewRequests(new HashSet<>(reviewRequests));
         return projectRepository.save(project);
     }
 
-    private void populateReviewRequest(ReviewRequest reviewRequest, AuthenticationData authData) {
+    private void saveReviewRequest(ReviewRequest reviewRequest, AuthenticationData authData) {
         List<Diff> diffs = getDiffsForReviewRequest(reviewRequest, authData);
         diffs.forEach(this::saveDiff);
+        reviewRequest.setDiffs(new HashSet<>(diffs));
 
+        List<Review> reviews = getReviewsForReviewRequest(reviewRequest, authData);
+        reviews.forEach(this::saveReview);
+        reviewRequest.setReviews(new HashSet<>(reviews));
+        reviewRequestRepository.save(reviewRequest);
     }
 
     private void saveDiff(Diff diff) {
@@ -62,7 +64,14 @@ public abstract class AbstractCodeReviewMiningService implements CodeReviewMinin
         });
     }
 
+    private void saveReview(Review review) {
+        userRepository.save(review.getAuthor());
+        approvalStatusRepository.save(review.getStatus());
+        reviewRepository.save(review);
+    }
+
     protected abstract Project getProject(String host, String projectId, AuthenticationData authData);
     protected abstract List<ReviewRequest> getReviewRequestsForProject(Project project, AuthenticationData authData);
     protected abstract List<Diff> getDiffsForReviewRequest(ReviewRequest reviewRequest, AuthenticationData authData);
+    protected abstract List<Review> getReviewsForReviewRequest(ReviewRequest reviewRequest, AuthenticationData authData);
 }

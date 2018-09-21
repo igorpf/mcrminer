@@ -34,7 +34,7 @@ public class MockCodeReviewMiningService extends AbstractCodeReviewMiningService
         comment1.setText("Some comment");
         comment1.setAuthor(user);
         Comment comment2 = new Comment();
-        comment2.setText("Some comment");
+        comment2.setText("Some other comment");
         comment2.setAuthor(user);
         File file1 = new File();
         file1.setComments(Arrays.asList(comment1, comment2));
@@ -42,5 +42,24 @@ public class MockCodeReviewMiningService extends AbstractCodeReviewMiningService
         Diff diff = new Diff();
         diff.setFiles(Collections.singletonList(file1));
         return Collections.singletonList(diff);
+    }
+
+    @Override
+    protected List<Review> getReviewsForReviewRequest(ReviewRequest reviewRequest, AuthenticationData authData) {
+        User user = new User();
+        user.setEmail("someuser@email.com");
+        ApprovalStatus status = new ApprovalStatus();
+        status.setApproval(true);
+        status.setValue(2);
+        status.setLabel("+2");
+        Review review = new Review();
+        review.setStatus(status);
+        review.setDescription("very good");
+        review.setAuthor(user);
+        Review review2 = new Review();
+        review2.setStatus(status);
+        review2.setDescription("awesome");
+        review2.setAuthor(user);
+        return Arrays.asList(review, review2);
     }
 }
