@@ -37,6 +37,11 @@ public class AbstractCodeReviewMiningServiceIntegrationTest {
         public String getPassword() {
             return "";
         }
+
+        @Override
+        public String getHost() {
+            return "https://localhost";
+        }
     };
 
     @Before
@@ -45,7 +50,7 @@ public class AbstractCodeReviewMiningServiceIntegrationTest {
 
     @Test
     public void test() {
-        Project fetchedProject = codeReviewMiningService.fetchProject("https://localhost", "someProject", authData);
+        Project fetchedProject = codeReviewMiningService.fetchProject("someProject", authData);
         ProjectProjection savedProject = projectRepository.getById(fetchedProject.getId());
         assertThat(savedProject.getReviewRequests(), hasSize(2));
     }

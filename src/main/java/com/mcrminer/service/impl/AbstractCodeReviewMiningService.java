@@ -29,8 +29,8 @@ public abstract class AbstractCodeReviewMiningService implements CodeReviewMinin
     private ApprovalStatusRepository approvalStatusRepository;
 
     @Override
-    public Project fetchProject(String host, String projectId, AuthenticationData authData) {
-        Project project = getProject(host, projectId, authData);
+    public Project fetchProject(String projectId, AuthenticationData authData) {
+        Project project = getProject(projectId, authData);
         project = projectRepository.save(project);
         List<ReviewRequest> reviewRequests = getReviewRequestsForProject(project, authData);
         reviewRequests.forEach(reviewRequest -> saveReviewRequest(reviewRequest, authData));
@@ -70,7 +70,7 @@ public abstract class AbstractCodeReviewMiningService implements CodeReviewMinin
         reviewRepository.save(review);
     }
 
-    protected abstract Project getProject(String host, String projectId, AuthenticationData authData);
+    protected abstract Project getProject(String projectId, AuthenticationData authData);
     protected abstract List<ReviewRequest> getReviewRequestsForProject(Project project, AuthenticationData authData);
     protected abstract List<Diff> getDiffsForReviewRequest(ReviewRequest reviewRequest, AuthenticationData authData);
     protected abstract List<Review> getReviewsForReviewRequest(ReviewRequest reviewRequest, AuthenticationData authData);

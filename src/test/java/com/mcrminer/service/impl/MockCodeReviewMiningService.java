@@ -12,9 +12,9 @@ import java.util.List;
 public class MockCodeReviewMiningService extends AbstractCodeReviewMiningService {
 
     @Override
-    protected Project getProject(String host, String projectId, AuthenticationData authData) {
+    protected Project getProject(String projectId, AuthenticationData authData) {
         Project project = new Project();
-        project.setUrlPath(String.format("%s/%s", host, projectId));
+        project.setUrlPath(String.format("%s/%s", authData.getHost(), projectId));
         project.setName("Mock project");
         return project;
     }

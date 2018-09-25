@@ -15,6 +15,7 @@ public final class Project {
     @Id
     @GeneratedValue
     private Integer id;
+    private String codeReviewToolId;
     private String urlPath;
     private String name;
 
@@ -30,6 +31,14 @@ public final class Project {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getCodeReviewToolId() {
+        return codeReviewToolId;
+    }
+
+    public void setCodeReviewToolId(String codeReviewToolId) {
+        this.codeReviewToolId = codeReviewToolId;
     }
 
     public String getUrlPath() {
