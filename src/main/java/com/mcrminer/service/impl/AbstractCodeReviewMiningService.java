@@ -42,6 +42,8 @@ public abstract class AbstractCodeReviewMiningService implements CodeReviewMinin
     }
 
     private void saveReviewRequest(ReviewRequest reviewRequest, AuthenticationData authData) {
+        if (reviewRequest.getSubmitter() != null)
+            userRepository.save(reviewRequest.getSubmitter());
         reviewRequestRepository.save(reviewRequest);
         List<Diff> diffs = getDiffsForReviewRequest(reviewRequest, authData);
         for (Diff diff : diffs) {
@@ -57,8 +59,6 @@ public abstract class AbstractCodeReviewMiningService implements CodeReviewMinin
         }
         reviewRequest.setReviews(new HashSet<>(reviews));
 
-        if (reviewRequest.getSubmitter() != null)
-            userRepository.save(reviewRequest.getSubmitter());
         reviewRequestRepository.save(reviewRequest);
     }
 
