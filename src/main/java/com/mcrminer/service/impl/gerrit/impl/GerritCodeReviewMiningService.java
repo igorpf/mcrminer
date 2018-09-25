@@ -1,6 +1,7 @@
 package com.mcrminer.service.impl.gerrit.impl;
 
 import com.google.gerrit.extensions.api.GerritApi;
+import com.google.gerrit.extensions.client.ListChangesOption;
 import com.google.gerrit.extensions.common.ProjectInfo;
 import com.google.gerrit.extensions.restapi.RestApiException;
 import com.mcrminer.exceptions.ClientApiException;
@@ -29,6 +30,10 @@ public class GerritCodeReviewMiningService extends AbstractCodeReviewMiningServi
     private static final Logger LOG = LoggerFactory.getLogger(GerritCodeReviewMiningService.class);
     private static final String PROJECT_URL_FORMAT = "%s/%s";
     private static final String PROJECT_QUERY = "project:%s";
+    private static final ListChangesOption[] REVIEW_REQUEST_OPTIONS = {
+            ListChangesOption.DETAILED_ACCOUNTS,
+            ListChangesOption.DETAILED_LABELS
+    };
     @Autowired
     private GerritApiModelConverter modelConverter;
 
@@ -48,7 +53,7 @@ public class GerritCodeReviewMiningService extends AbstractCodeReviewMiningServi
         return fetchObjectHandlingException(() -> {
             GerritApi api = getGerritApi(authData);
             String projectQuery = String.format(PROJECT_QUERY, project.getCodeReviewToolId());
-            return modelConverter.fromChanges(api.changes().query(projectQuery).get());
+            return modelConverter.fromChanges(api.changes().query(projectQuery).withOptions(REVIEW_REQUEST_OPTIONS).get());
         });
     }
 
