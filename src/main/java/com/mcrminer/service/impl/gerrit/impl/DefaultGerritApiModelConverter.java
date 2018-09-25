@@ -46,7 +46,10 @@ public class DefaultGerritApiModelConverter implements GerritApiModelConverter {
     private ReviewRequest fromChange(ChangeInfo changeInfo) {
         ReviewRequest reviewRequest = new ReviewRequest();
         reviewRequest.setBranch(changeInfo.branch);
-        reviewRequest.setPublic(!changeInfo.isPrivate);
+        reviewRequest.setCommitId(changeInfo.changeId);
+        reviewRequest.setCreatedTime(changeInfo.created.toLocalDateTime());
+        reviewRequest.setUpdatedTime(changeInfo.updated.toLocalDateTime());
+        reviewRequest.setPublic(changeInfo.isPrivate != null && !changeInfo.isPrivate);
         reviewRequest.setSubmitter(fromAccount(changeInfo.owner));
         reviewRequest.setStatus(fromStatus(changeInfo.status));
         reviewRequest.setDescription(changeInfo.subject);
@@ -54,6 +57,8 @@ public class DefaultGerritApiModelConverter implements GerritApiModelConverter {
     }
 
     private User fromAccount(AccountInfo accountInfo) {
+        if (accountInfo.email == null)
+            return null;
         User user = new User();
         user.setEmail(accountInfo.email);
         user.setFullname(accountInfo.name);

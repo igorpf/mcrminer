@@ -33,19 +33,31 @@ public abstract class AbstractCodeReviewMiningService implements CodeReviewMinin
         Project project = getProject(projectId, authData);
         project = projectRepository.save(project);
         List<ReviewRequest> reviewRequests = getReviewRequestsForProject(project, authData);
-        reviewRequests.forEach(reviewRequest -> saveReviewRequest(reviewRequest, authData));
+        for (ReviewRequest reviewRequest : reviewRequests) {
+            reviewRequest.setProject(project);
+            saveReviewRequest(reviewRequest, authData);
+        }
         project.setReviewRequests(new HashSet<>(reviewRequests));
         return projectRepository.save(project);
     }
 
     private void saveReviewRequest(ReviewRequest reviewRequest, AuthenticationData authData) {
         List<Diff> diffs = getDiffsForReviewRequest(reviewRequest, authData);
-        diffs.forEach(this::saveDiff);
+        for (Diff diff : diffs) {
+            diff.setReviewRequest(reviewRequest);
+            saveDiff(diff);
+        }
         reviewRequest.setDiffs(new HashSet<>(diffs));
 
         List<Review> reviews = getReviewsForReviewRequest(reviewRequest, authData);
-        reviews.forEach(this::saveReview);
+        for (Review review : reviews) {
+            review.setReviewed(reviewRequest);
+            saveReview(review);
+        }
         reviewRequest.setReviews(new HashSet<>(reviews));
+
+        if (reviewRequest.getSubmitter() != null)
+            userRepository.save(reviewRequest.getSubmitter());
         reviewRequestRepository.save(reviewRequest);
     }
 

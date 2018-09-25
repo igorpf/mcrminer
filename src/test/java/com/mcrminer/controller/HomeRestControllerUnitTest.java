@@ -20,6 +20,6 @@ public class HomeRestControllerUnitTest
     @Test
     public void test()
     {
-        assertThat(homeRestController.hello(), equalTo("hello"));
+        assertThat(homeRestController.fetchProject(null, null), equalTo("hello"));
     }
 }
