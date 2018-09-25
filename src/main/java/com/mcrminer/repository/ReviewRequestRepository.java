@@ -1,0 +1,9 @@
+package com.mcrminer.repository;
+
+import com.mcrminer.model.ReviewRequest;
+import com.mcrminer.model.projections.ReviewRequestProjection;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ReviewRequestRepository extends JpaRepository<ReviewRequest, Integer> {
+    ReviewRequestProjection getById(Integer id);
+}

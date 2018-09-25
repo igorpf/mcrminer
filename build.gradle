@@ -2,6 +2,7 @@ buildscript {
 	ext {
 		springBootVersion = '2.0.3.RELEASE'
         sonarQubePluginVersion = '2.6.2'
+        gerritApiVersion = '0.8.15'
 	}
 	repositories {
         maven {
@@ -38,6 +39,7 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
 	compile('org.springframework.boot:spring-boot-devtools')
 	compile('com.h2database:h2')
+	compile("com.urswolfer.gerrit.client.rest:gerrit-rest-java-client:${gerritApiVersion}")
     compile('com.zaxxer:HikariCP:2.5.1') {
         exclude group: 'org.hibernate', module: 'hibernate-core'
     }
