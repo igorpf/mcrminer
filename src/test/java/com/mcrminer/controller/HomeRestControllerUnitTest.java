@@ -20,6 +20,5 @@ public class HomeRestControllerUnitTest
     @Test
     public void test()
     {
-        assertThat(homeRestController.fetchProject(null, null), equalTo("hello"));
     }
 }

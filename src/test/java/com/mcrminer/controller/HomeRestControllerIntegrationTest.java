@@ -35,10 +35,6 @@ public class HomeRestControllerIntegrationTest
     @Test
     public void test() throws Exception
     {
-        mockMvc.perform(
-                get("/home")
-        ).andExpect(
-                status().isOk()
-        );
+
     }
 }

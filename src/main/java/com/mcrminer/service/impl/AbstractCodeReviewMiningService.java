@@ -42,6 +42,7 @@ public abstract class AbstractCodeReviewMiningService implements CodeReviewMinin
     }
 
     private void saveReviewRequest(ReviewRequest reviewRequest, AuthenticationData authData) {
+        reviewRequestRepository.save(reviewRequest);
         List<Diff> diffs = getDiffsForReviewRequest(reviewRequest, authData);
         for (Diff diff : diffs) {
             diff.setReviewRequest(reviewRequest);
