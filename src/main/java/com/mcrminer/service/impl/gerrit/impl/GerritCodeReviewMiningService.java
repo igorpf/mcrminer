@@ -31,8 +31,14 @@ public class GerritCodeReviewMiningService extends AbstractCodeReviewMiningServi
     private static final String PROJECT_URL_FORMAT = "%s/%s";
     private static final String PROJECT_QUERY = "project:%s";
     private static final ListChangesOption[] REVIEW_REQUEST_OPTIONS = {
-            ListChangesOption.DETAILED_ACCOUNTS,
+            ListChangesOption.DETAILED_ACCOUNTS
+    };
+    private static final ListChangesOption[] REVIEW_OPTIONS = {
             ListChangesOption.DETAILED_LABELS
+    };
+    private static final ListChangesOption[] DIFF_OPTIONS = {
+            ListChangesOption.ALL_FILES,
+            ListChangesOption.ALL_REVISIONS
     };
     @Autowired
     private GerritApiModelConverter modelConverter;
@@ -53,18 +59,34 @@ public class GerritCodeReviewMiningService extends AbstractCodeReviewMiningServi
         return fetchObjectHandlingException(() -> {
             GerritApi api = getGerritApi(authData);
             String projectQuery = String.format(PROJECT_QUERY, project.getCodeReviewToolId());
-            return modelConverter.fromChanges(api.changes().query(projectQuery).withOptions(REVIEW_REQUEST_OPTIONS).get());
+            return modelConverter.reviewRequestsFromChanges(api.changes().query(projectQuery)
+                    .withOptions(REVIEW_REQUEST_OPTIONS)
+                    .withLimit(5)
+                    .get());
         });
     }
 
     @Override
     protected List<Diff> getDiffsForReviewRequest(ReviewRequest reviewRequest, AuthenticationData authData) {
-        return Collections.emptyList();
+        return fetchObjectHandlingException(() -> {
+            GerritApi api = getGerritApi(authData);
+            String projectQuery = String.format(PROJECT_QUERY, reviewRequest.getProject().getCodeReviewToolId());
+            return modelConverter.diffsFromChanges(api.changes().query(projectQuery)
+                    .withOptions(DIFF_OPTIONS)
+                    .withLimit(5)
+                    .get());
+        });
     }
 
     @Override
     protected List<Review> getReviewsForReviewRequest(ReviewRequest reviewRequest, AuthenticationData authData) {
-        return Collections.emptyList();
+        return fetchObjectHandlingException(() -> {
+            GerritApi api = getGerritApi(authData);
+            String projectQuery = String.format(PROJECT_QUERY, reviewRequest.getProject().getCodeReviewToolId());
+            return modelConverter.reviewsFromChanges(api.changes().query(projectQuery)
+                    .withOptions(REVIEW_OPTIONS)
+                    .get());
+        });
     }
 
     private <T> T fetchObjectHandlingException(ApiSupplier<T> supplier) {

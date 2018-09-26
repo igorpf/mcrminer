@@ -64,7 +64,8 @@ public abstract class AbstractCodeReviewMiningService implements CodeReviewMinin
 
     private void saveDiff(Diff diff) {
         diff.getFiles().forEach(file -> {
-            saveComments(file.getComments());
+            if (file.getComments() != null)
+                saveComments(file.getComments());
             fileRepository.save(file);
         });
         diffRepository.save(diff);

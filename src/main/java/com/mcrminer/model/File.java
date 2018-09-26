@@ -12,9 +12,9 @@ public final class File {
     @Id
     @GeneratedValue
     private Integer id;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private Diff diff;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.PERSIST)
     private Collection<Comment> comments;
 
     private String newFilename;

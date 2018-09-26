@@ -11,7 +11,7 @@ public final class Diff extends Reviewable {
     private ReviewRequest reviewRequest;
     @OneToMany
     private Set<Review> reviews;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.PERSIST)
     private Collection<File> files;
 
     public ReviewRequest getReviewRequest() {
