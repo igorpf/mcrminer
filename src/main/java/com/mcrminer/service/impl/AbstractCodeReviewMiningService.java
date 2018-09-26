@@ -73,9 +73,16 @@ public abstract class AbstractCodeReviewMiningService implements CodeReviewMinin
 
     private void saveComments(Iterable<Comment> comments) {
         comments.forEach(comment -> {
-            userRepository.save(comment.getAuthor());
+            if (!commentAuthorIsAlreadySaved(comment))
+                userRepository.save(comment.getAuthor());
+            else if (comment.getAuthor() != null)
+                comment.setAuthor(userRepository.findByEmail(comment.getAuthor().getEmail()));
             commentRepository.save(comment);
         });
+    }
+
+    private boolean commentAuthorIsAlreadySaved(Comment comment) {
+        return comment.getAuthor() != null && !userRepository.existsByEmail(comment.getAuthor().getEmail());
     }
 
     private void saveReview(Review review) {

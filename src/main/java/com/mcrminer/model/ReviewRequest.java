@@ -9,11 +9,11 @@ import java.util.Set;
 @Entity
 public final class ReviewRequest extends Reviewable {
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private User submitter;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private Set<Diff> diffs;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private Set<Review> reviews;
     @ManyToOne
     private Project project;

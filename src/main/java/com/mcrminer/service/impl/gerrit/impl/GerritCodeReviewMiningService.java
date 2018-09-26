@@ -40,6 +40,7 @@ public class GerritCodeReviewMiningService extends AbstractCodeReviewMiningServi
             ListChangesOption.ALL_FILES,
             ListChangesOption.ALL_REVISIONS
     };
+    private static final int QUERY_LIMIT = 1;
     @Autowired
     private GerritApiModelConverter modelConverter;
 
@@ -61,7 +62,7 @@ public class GerritCodeReviewMiningService extends AbstractCodeReviewMiningServi
             String projectQuery = String.format(PROJECT_QUERY, project.getCodeReviewToolId());
             return modelConverter.reviewRequestsFromChanges(api.changes().query(projectQuery)
                     .withOptions(REVIEW_REQUEST_OPTIONS)
-                    .withLimit(5)
+                    .withLimit(QUERY_LIMIT)
                     .get());
         });
     }
@@ -73,7 +74,7 @@ public class GerritCodeReviewMiningService extends AbstractCodeReviewMiningServi
             String projectQuery = String.format(PROJECT_QUERY, reviewRequest.getProject().getCodeReviewToolId());
             return modelConverter.diffsFromChanges(api.changes().query(projectQuery)
                     .withOptions(DIFF_OPTIONS)
-                    .withLimit(5)
+                    .withLimit(QUERY_LIMIT)
                     .get());
         });
     }
