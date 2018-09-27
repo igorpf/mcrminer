@@ -68,21 +68,26 @@ public abstract class AbstractCodeReviewMiningService implements CodeReviewMinin
         diff.setFiles(null);
         diffRepository.save(diff);
         files.forEach(file -> {
-            if (file.getComments() != null)
-                saveComments(file.getComments());
+            Collection<Comment> comments = file.getComments();
+            file.setComments(null);
             file.setDiff(diff);
             fileRepository.save(file);
+            if (comments != null) {
+                saveComments(comments, file);
+                file.setComments(comments);
+            }
         });
         diff.setFiles(files);
         diffRepository.save(diff);
     }
 
-    private void saveComments(Iterable<Comment> comments) {
+    private void saveComments(Iterable<Comment> comments, File file) {
         comments.forEach(comment -> {
             if (!commentAuthorIsAlreadySaved(comment))
                 userRepository.save(comment.getAuthor());
             else if (comment.getAuthor() != null)
                 comment.setAuthor(userRepository.findByEmail(comment.getAuthor().getEmail()));
+            comment.setFile(file);
             commentRepository.save(comment);
         });
     }

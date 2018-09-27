@@ -53,10 +53,10 @@ public class DefaultGerritApiModelConverter implements GerritApiModelConverter {
     }
 
     @Override
-    public List<Diff> diffsFromChanges(List<ChangeInfo> changeInfos) {
+    public List<Diff> diffsFromChanges(List<ChangeInfo> changeInfos, Map<ChangeInfo, Map<String, List<CommentInfo>>> changeInfoCommentsMap) {
         return changeInfos
                 .stream()
-                .map(this::diffsFromChange)
+                .map(changeInfo -> diffsFromChange(changeInfo, changeInfoCommentsMap.get(changeInfo)))
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
     }
@@ -72,10 +72,10 @@ public class DefaultGerritApiModelConverter implements GerritApiModelConverter {
 
     private List<Review> reviewsFromChange(ChangeInfo changeInfo) {
         List<ApprovalInfo> approvals = changeInfo.labels.get(CODE_REVIEW_LABEL).all;
-        return approvals
+        return approvals != null? approvals
                 .stream()
                 .map(this::fromApproval)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()) : Collections.emptyList();
     }
 
     private Review fromApproval(ApprovalInfo approvalInfo) {
@@ -109,35 +109,45 @@ public class DefaultGerritApiModelConverter implements GerritApiModelConverter {
         return reviewRequest;
     }
 
-    private List<Diff> diffsFromChange(ChangeInfo changeInfo) {
+    private List<Diff> diffsFromChange(ChangeInfo changeInfo, Map<String, List<CommentInfo>> changeInfoCommentsMap) {
         return changeInfo.revisions
                 .entrySet()
                 .stream()
-                .map(entry -> fromRevision(entry.getValue()))
+                .map(entry -> fromRevision(entry.getValue(), changeInfoCommentsMap))
                 .collect(Collectors.toList());
     }
 
-    private Diff fromRevision(RevisionInfo revisionInfo) {
+    private Diff fromRevision(RevisionInfo revisionInfo, Map<String, List<CommentInfo>> changeInfoCommentsMap) {
         final Diff diff = new Diff();
         diff.setCreatedTime(revisionInfo.created.toLocalDateTime());
         List<File> files = revisionInfo.files
                 .entrySet()
                 .stream()
-                .map(entry -> fromFile(entry.getValue(), entry.getKey()))
+                .map(entry -> fromFile(entry.getValue(), entry.getKey(), changeInfoCommentsMap.get(entry.getKey())))
                 .collect(Collectors.toList());
 
         diff.setFiles(files);
         return diff;
     }
 
-    private File fromFile(FileInfo fileInfo, String currentFilename) {
+    private File fromFile(FileInfo fileInfo, String currentFilename, List<CommentInfo> comments) {
         File file = new File();
         file.setNewFilename(currentFilename);
         file.setOldFilename(fileInfo.oldPath);
         file.setLinesInserted(fileInfo.linesInserted);
         file.setLinesRemoved(fileInfo.linesDeleted);
         file.setStatus(fromCharacter(fileInfo.status));
+        if (comments != null)
+            file.setComments(comments.stream().map(this::fromComment).collect(Collectors.toList()));
         return file;
+    }
+
+    private Comment fromComment(CommentInfo commentInfo) {
+        Comment comment = new Comment();
+        comment.setAuthor(fromAccount(commentInfo.author));
+        comment.setText(commentInfo.message);
+        comment.setUpdatedTime(commentInfo.updated.toLocalDateTime());
+        return comment;
     }
 
     private User fromAccount(AccountInfo accountInfo) {

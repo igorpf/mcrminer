@@ -13,6 +13,7 @@ public final class Comment extends BaseAuditingEntity {
     private File file;
     @ManyToOne
     private User author;
+    @Lob
     private String text;
 
     public Integer getId() {
