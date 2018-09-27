@@ -3,19 +3,19 @@ package com.mcrminer.service.impl.gerrit.impl;
 import com.google.gerrit.extensions.client.ChangeStatus;
 import com.google.gerrit.extensions.common.*;
 import com.mcrminer.model.*;
+import com.mcrminer.model.enums.FileStatus;
 import com.mcrminer.model.enums.ReviewRequestStatus;
 import com.mcrminer.service.impl.gerrit.GerritApiModelConverter;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import javax.annotation.Resource;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class DefaultGerritApiModelConverter implements GerritApiModelConverter {
 
+    private static final String CODE_REVIEW_LABEL = "Code-Review";
     private static final Map<ChangeStatus, ReviewRequestStatus> map = new EnumMap<>(ChangeStatus.class);
     static {
         map.put(ChangeStatus.MERGED, ReviewRequestStatus.MERGED);
@@ -24,6 +24,17 @@ public class DefaultGerritApiModelConverter implements GerritApiModelConverter {
         map.put(ChangeStatus.SUBMITTED, ReviewRequestStatus.PENDING);
         map.put(ChangeStatus.ABANDONED, ReviewRequestStatus.REJECTED);
     }
+    private static final Map<Character, FileStatus> fileStatusMap = new HashMap<>();
+    static {
+        fileStatusMap.put('A', FileStatus.ADDED);
+        fileStatusMap.put('D', FileStatus.DELETED);
+        fileStatusMap.put('C', FileStatus.COPIED);
+        fileStatusMap.put('R', FileStatus.MOVED);
+        fileStatusMap.put('W', FileStatus.MODIFIED);
+    }
+
+    @Resource(name = "gerritDefaultLabels")
+    private Set<ApprovalStatus> gerritDefaultLabels;
 
     @Override
     public Project fromProject(ProjectInfo gerritProject) {
@@ -52,7 +63,37 @@ public class DefaultGerritApiModelConverter implements GerritApiModelConverter {
 
     @Override
     public List<Review> reviewsFromChanges(List<ChangeInfo> changeInfos) {
-        return Collections.emptyList();
+        return changeInfos
+                .stream()
+                .map(this::reviewsFromChange)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+    }
+
+    private List<Review> reviewsFromChange(ChangeInfo changeInfo) {
+        List<ApprovalInfo> approvals = changeInfo.labels.get(CODE_REVIEW_LABEL).all;
+        return approvals
+                .stream()
+                .map(this::fromApproval)
+                .collect(Collectors.toList());
+    }
+
+    private Review fromApproval(ApprovalInfo approvalInfo) {
+        Review review = new Review();
+        fromValue(approvalInfo.value).ifPresent(review::setStatus);
+        review.setAuthor(fromAccount(approvalInfo));
+        return review;
+    }
+
+    private FileStatus fromCharacter(Character character) {
+        return character != null? fileStatusMap.get(character) : FileStatus.MODIFIED;
+    }
+
+   private Optional<ApprovalStatus> fromValue(Integer value) {
+        return gerritDefaultLabels
+                .stream()
+                .filter(label -> label.getValue().equals(value))
+                .findFirst();
     }
 
     private ReviewRequest reviewRequestFromChange(ChangeInfo changeInfo) {
@@ -82,11 +123,7 @@ public class DefaultGerritApiModelConverter implements GerritApiModelConverter {
         List<File> files = revisionInfo.files
                 .entrySet()
                 .stream()
-                .map(entry -> {
-                    File f = fromFile(entry.getValue(), entry.getKey());
-                    f.setDiff(diff);
-                    return f;
-                })
+                .map(entry -> fromFile(entry.getValue(), entry.getKey()))
                 .collect(Collectors.toList());
 
         diff.setFiles(files);
@@ -99,7 +136,7 @@ public class DefaultGerritApiModelConverter implements GerritApiModelConverter {
         file.setOldFilename(fileInfo.oldPath);
         file.setLinesInserted(fileInfo.linesInserted);
         file.setLinesRemoved(fileInfo.linesDeleted);
-//        file.setStatus(fileInfo.status);
+        file.setStatus(fromCharacter(fileInfo.status));
         return file;
     }
 

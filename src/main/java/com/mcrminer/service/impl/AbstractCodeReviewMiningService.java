@@ -6,6 +6,7 @@ import com.mcrminer.service.AuthenticationData;
 import com.mcrminer.service.CodeReviewMiningService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
@@ -63,11 +64,16 @@ public abstract class AbstractCodeReviewMiningService implements CodeReviewMinin
     }
 
     private void saveDiff(Diff diff) {
-        diff.getFiles().forEach(file -> {
+        Collection<File> files = diff.getFiles();
+        diff.setFiles(null);
+        diffRepository.save(diff);
+        files.forEach(file -> {
             if (file.getComments() != null)
                 saveComments(file.getComments());
+            file.setDiff(diff);
             fileRepository.save(file);
         });
+        diff.setFiles(files);
         diffRepository.save(diff);
     }
 

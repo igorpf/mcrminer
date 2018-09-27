@@ -9,7 +9,7 @@ import java.util.Set;
 @Entity
 public final class ReviewRequest extends Reviewable {
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private User submitter;
     @OneToMany(cascade = CascadeType.ALL)
     private Set<Diff> diffs;

@@ -34,7 +34,8 @@ public class GerritCodeReviewMiningService extends AbstractCodeReviewMiningServi
             ListChangesOption.DETAILED_ACCOUNTS
     };
     private static final ListChangesOption[] REVIEW_OPTIONS = {
-            ListChangesOption.DETAILED_LABELS
+            ListChangesOption.DETAILED_LABELS,
+            ListChangesOption.DETAILED_ACCOUNTS
     };
     private static final ListChangesOption[] DIFF_OPTIONS = {
             ListChangesOption.ALL_FILES,
@@ -86,6 +87,7 @@ public class GerritCodeReviewMiningService extends AbstractCodeReviewMiningServi
             String projectQuery = String.format(PROJECT_QUERY, reviewRequest.getProject().getCodeReviewToolId());
             return modelConverter.reviewsFromChanges(api.changes().query(projectQuery)
                     .withOptions(REVIEW_OPTIONS)
+                    .withLimit(QUERY_LIMIT)
                     .get());
         });
     }
