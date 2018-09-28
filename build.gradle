@@ -3,6 +3,7 @@ buildscript {
 		springBootVersion = '2.0.3.RELEASE'
         sonarQubePluginVersion = '2.6.2'
         gerritApiVersion = '0.8.15'
+		openCsvVersion = '3.9'
 	}
 	repositories {
         maven {
@@ -47,6 +48,7 @@ dependencies {
         exclude group: 'com.zaxxer', module: 'HikariCP'
         exclude group: 'org.hibernate', module: 'hibernate-core'
     }
+	compile("com.opencsv:opencsv:${openCsvVersion}")
 
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('org.springframework.security:spring-security-test')
