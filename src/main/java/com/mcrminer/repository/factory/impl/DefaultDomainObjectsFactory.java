@@ -8,7 +8,7 @@ import com.mcrminer.repository.factory.DomainObjectsFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service
+@Service("persistentObjectsDomainFactory")
 public class DefaultDomainObjectsFactory implements DomainObjectsFactory {
 
     @Autowired
