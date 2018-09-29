@@ -1,10 +1,13 @@
 package com.mcrminer.model.projections;
 
-import java.util.Set;
+import lombok.Builder;
+import lombok.RequiredArgsConstructor;
+import lombok.Value;
 
-public interface ProjectProjection {
-    Integer getId();
-    String getUrlPath();
-    String getName();
-    Set<ReviewRequestProjection> getReviewRequests();
+@Builder
+@Value
+@RequiredArgsConstructor
+public class ProjectProjection {
+    Integer id;
+    String urlPath, name;
 }

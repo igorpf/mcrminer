@@ -9,6 +9,7 @@ import org.junit.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -24,15 +25,20 @@ public class ExportServiceTest {
 
     @Before
     public void setUp() throws Exception {
+        LocalDateTime now = LocalDateTime.now();
         reviewRequest1 = ReviewRequestProjection
                 .builder()
-                .branch("master").commitId("deadbeef").description("Some cool feature").projectId(1).submitterEmail("example@domain.com").status(ReviewRequestStatus.MERGED)
+                .branch("master").commitId("deadbeef").description("Some cool feature")
+                .projectId(1).submitterEmail("example@domain.com").status(ReviewRequestStatus.MERGED)
+                .createdTime(now).updatedTime(now)
                 .build();
         reviewRequest2 = ReviewRequestProjection
                 .builder().isPublic(true)
-                .branch("develop").commitId("deadbeef").description("Bug fixing").projectId(2).submitterEmail("user@domain.com").status(ReviewRequestStatus.PENDING)
+                .branch("develop").commitId("deadbeef").description("Bug fixing")
+                .projectId(2).submitterEmail("user@domain.com").status(ReviewRequestStatus.PENDING)
+                .createdTime(now).updatedTime(now)
                 .build();
-        csvFileContent = new StringBuffer("projectId,branch,commitId,description,submitterEmail,isPublic,status")
+        csvFileContent = new StringBuffer("projectId,branch,commitId,description,submitterEmail,isPublic,status,createdTime,updatedTime")
                 .append(LINE_FEED)
                 .append(getCsvLineFor(reviewRequest1))
                 .append(getCsvLineFor(reviewRequest2))
@@ -57,7 +63,9 @@ public class ExportServiceTest {
                 .append(reviewRequest.getDescription()).append(FIELD_SEPARATOR)
                 .append(reviewRequest.getSubmitterEmail()).append(FIELD_SEPARATOR)
                 .append(reviewRequest.getIsPublic()).append(FIELD_SEPARATOR)
-                .append(reviewRequest.getStatus())
+                .append(reviewRequest.getStatus()).append(FIELD_SEPARATOR)
+                .append(reviewRequest.getCreatedTime()).append(FIELD_SEPARATOR)
+                .append(reviewRequest.getUpdatedTime())
                 .append(LINE_FEED)
                 .toString();
     }
