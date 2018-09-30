@@ -6,6 +6,8 @@ import com.mcrminer.model.*;
 import com.mcrminer.model.enums.FileStatus;
 import com.mcrminer.model.enums.ReviewRequestStatus;
 import com.mcrminer.service.impl.gerrit.GerritApiModelConverter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -17,24 +19,25 @@ public class DefaultGerritApiModelConverter implements GerritApiModelConverter {
 
     private static final String CODE_REVIEW_LABEL = "Code-Review";
     private static final Map<ChangeStatus, ReviewRequestStatus> map = new EnumMap<>(ChangeStatus.class);
+    private static final Map<Character, FileStatus> fileStatusMap = new HashMap<>();
     static {
         map.put(ChangeStatus.MERGED, ReviewRequestStatus.MERGED);
         map.put(ChangeStatus.NEW, ReviewRequestStatus.PENDING);
         map.put(ChangeStatus.DRAFT, ReviewRequestStatus.PENDING);
         map.put(ChangeStatus.SUBMITTED, ReviewRequestStatus.PENDING);
         map.put(ChangeStatus.ABANDONED, ReviewRequestStatus.REJECTED);
-    }
-    private static final Map<Character, FileStatus> fileStatusMap = new HashMap<>();
-    static {
         fileStatusMap.put('A', FileStatus.ADDED);
         fileStatusMap.put('D', FileStatus.DELETED);
         fileStatusMap.put('C', FileStatus.COPIED);
         fileStatusMap.put('R', FileStatus.MOVED);
         fileStatusMap.put('W', FileStatus.MODIFIED);
     }
-
-    @Resource(name = "gerritDefaultLabels")
     private Set<ApprovalStatus> gerritDefaultLabels;
+
+    @Autowired
+    public DefaultGerritApiModelConverter(@Qualifier("gerritDefaultLabels") Set<ApprovalStatus> gerritDefaultLabels) {
+        this.gerritDefaultLabels = gerritDefaultLabels;
+    }
 
     @Override
     public Project fromProject(ProjectInfo gerritProject) {

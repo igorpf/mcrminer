@@ -16,16 +16,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class HomeRestControllerIntegrationTest
-{
+public class HomeRestControllerIntegrationTest  {
     private MockMvc mockMvc;
 
     @Autowired
     private WebApplicationContext webApplicationContext;
 
     @Before
-    public void setUp()
-    {
+    public void setUp() {
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(webApplicationContext)
                 .alwaysDo(print())
@@ -33,8 +31,7 @@ public class HomeRestControllerIntegrationTest
     }
 
     @Test
-    public void test() throws Exception
-    {
+    public void test() throws Exception {
 
     }
 }

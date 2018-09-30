@@ -4,29 +4,22 @@ import com.mcrminer.model.*;
 import com.mcrminer.repository.*;
 import com.mcrminer.service.AuthenticationData;
 import com.mcrminer.service.CodeReviewMiningService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+@AllArgsConstructor
 public abstract class AbstractCodeReviewMiningService implements CodeReviewMiningService {
 
-    @Autowired
     private ProjectRepository projectRepository;
-    @Autowired
     private ReviewRequestRepository reviewRequestRepository;
-    @Autowired
     private DiffRepository diffRepository;
-    @Autowired
     private CommentRepository commentRepository;
-    @Autowired
     private UserRepository userRepository;
-    @Autowired
     private FileRepository fileRepository;
-    @Autowired
     private ReviewRepository reviewRepository;
-    @Autowired
     private ApprovalStatusRepository approvalStatusRepository;
 
     @Override
