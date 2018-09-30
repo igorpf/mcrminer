@@ -5,6 +5,7 @@ import com.mcrminer.repository.ApprovalStatusRepository;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -13,6 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Component
+@Profile({"!test"})
 public class GerritDatabasePopulator implements ApplicationRunner {
 
     private static final Set<ApprovalStatus> defaultLabels;
