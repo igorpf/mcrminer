@@ -1,6 +1,7 @@
 package com.mcrminer.repository.factory.impl;
 
 import com.mcrminer.model.*;
+import com.mcrminer.model.enums.FileStatus;
 import com.mcrminer.repository.*;
 import com.mcrminer.repository.factory.DomainObjectsFactory;
 import lombok.AllArgsConstructor;
@@ -16,6 +17,10 @@ public class DefaultDomainObjectsFactory implements DomainObjectsFactory {
     private CommentRepository commentRepository;
     private UserRepository userRepository;
     private FileRepository fileRepository;
+    private final String DEFAULT_EMAIL = "user@example.com";
+    private final String DEFAULT_FILENAME = "file.txt";
+    private final String DEFAULT_FULLNAME = "Example user";
+    private final String DEFAULT_USERNAME = "someusername";
 
     @Override
     public Project createProject(String urlPath, String name) {
@@ -34,17 +39,30 @@ public class DefaultDomainObjectsFactory implements DomainObjectsFactory {
 
     @Override
     public Comment createComment(String text) {
-        return null;
+        Comment comment = new Comment();
+        comment.setText(text);
+        comment.setAuthor(createUser(DEFAULT_EMAIL));
+        comment.setFile(createFile(DEFAULT_FILENAME));
+        return commentRepository.save(comment);
     }
 
     @Override
     public User createUser(String email) {
-        return null;
+        User user = new User();
+        user.setEmail(email);
+        user.setFullname(DEFAULT_FULLNAME);
+        user.setUsername(DEFAULT_USERNAME);
+        return userRepository.save(user);
     }
 
     @Override
     public File createFile(String filename) {
-        return null;
+        File file = new File();
+        file.setLinesInserted(1);
+        file.setLinesRemoved(2);
+        file.setStatus(FileStatus.MODIFIED);
+        file.setNewFilename(filename);
+        return fileRepository.save(file);
     }
 
 
