@@ -1,24 +1,21 @@
 package com.mcrminer.service.impl.gerrit.impl;
 
 import com.google.gerrit.extensions.client.ChangeStatus;
-import com.google.gerrit.extensions.common.AccountInfo;
-import com.google.gerrit.extensions.common.ChangeInfo;
-import com.google.gerrit.extensions.common.ProjectInfo;
-import com.mcrminer.model.Project;
-import com.mcrminer.model.ReviewRequest;
-import com.mcrminer.model.User;
+import com.google.gerrit.extensions.common.*;
+import com.mcrminer.model.*;
+import com.mcrminer.model.enums.FileStatus;
 import com.mcrminer.model.enums.ReviewRequestStatus;
 import com.mcrminer.service.impl.gerrit.GerritApiModelConverter;
 import org.springframework.stereotype.Service;
 
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import javax.annotation.Resource;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class DefaultGerritApiModelConverter implements GerritApiModelConverter {
 
+    private static final String CODE_REVIEW_LABEL = "Code-Review";
     private static final Map<ChangeStatus, ReviewRequestStatus> map = new EnumMap<>(ChangeStatus.class);
     static {
         map.put(ChangeStatus.MERGED, ReviewRequestStatus.MERGED);
@@ -27,6 +24,17 @@ public class DefaultGerritApiModelConverter implements GerritApiModelConverter {
         map.put(ChangeStatus.SUBMITTED, ReviewRequestStatus.PENDING);
         map.put(ChangeStatus.ABANDONED, ReviewRequestStatus.REJECTED);
     }
+    private static final Map<Character, FileStatus> fileStatusMap = new HashMap<>();
+    static {
+        fileStatusMap.put('A', FileStatus.ADDED);
+        fileStatusMap.put('D', FileStatus.DELETED);
+        fileStatusMap.put('C', FileStatus.COPIED);
+        fileStatusMap.put('R', FileStatus.MOVED);
+        fileStatusMap.put('W', FileStatus.MODIFIED);
+    }
+
+    @Resource(name = "gerritDefaultLabels")
+    private Set<ApprovalStatus> gerritDefaultLabels;
 
     @Override
     public Project fromProject(ProjectInfo gerritProject) {
@@ -37,13 +45,58 @@ public class DefaultGerritApiModelConverter implements GerritApiModelConverter {
     }
 
     @Override
-    public List<ReviewRequest> fromChanges(List<ChangeInfo> changeInfos) {
+    public List<ReviewRequest> reviewRequestsFromChanges(List<ChangeInfo> changeInfos) {
         return changeInfos
                 .stream()
-                .map(this::fromChange)
+                .map(this::reviewRequestFromChange)
                 .collect(Collectors.toList());
     }
-    private ReviewRequest fromChange(ChangeInfo changeInfo) {
+
+    @Override
+    public List<Diff> diffsFromChanges(List<ChangeInfo> changeInfos, Map<ChangeInfo, Map<String, List<CommentInfo>>> changeInfoCommentsMap) {
+        return changeInfos
+                .stream()
+                .map(changeInfo -> diffsFromChange(changeInfo, changeInfoCommentsMap.get(changeInfo)))
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Review> reviewsFromChanges(List<ChangeInfo> changeInfos) {
+        return changeInfos
+                .stream()
+                .map(this::reviewsFromChange)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+    }
+
+    private List<Review> reviewsFromChange(ChangeInfo changeInfo) {
+        List<ApprovalInfo> approvals = changeInfo.labels.get(CODE_REVIEW_LABEL).all;
+        return approvals != null? approvals
+                .stream()
+                .map(this::fromApproval)
+                .collect(Collectors.toList()) : Collections.emptyList();
+    }
+
+    private Review fromApproval(ApprovalInfo approvalInfo) {
+        Review review = new Review();
+        fromValue(approvalInfo.value).ifPresent(review::setStatus);
+        review.setAuthor(fromAccount(approvalInfo));
+        return review;
+    }
+
+    private FileStatus fromCharacter(Character character) {
+        return character != null? fileStatusMap.get(character) : FileStatus.MODIFIED;
+    }
+
+   private Optional<ApprovalStatus> fromValue(Integer value) {
+        return gerritDefaultLabels
+                .stream()
+                .filter(label -> label.getValue().equals(value))
+                .findFirst();
+    }
+
+    private ReviewRequest reviewRequestFromChange(ChangeInfo changeInfo) {
         ReviewRequest reviewRequest = new ReviewRequest();
         reviewRequest.setBranch(changeInfo.branch);
         reviewRequest.setCommitId(changeInfo.changeId);
@@ -54,6 +107,47 @@ public class DefaultGerritApiModelConverter implements GerritApiModelConverter {
         reviewRequest.setStatus(fromStatus(changeInfo.status));
         reviewRequest.setDescription(changeInfo.subject);
         return reviewRequest;
+    }
+
+    private List<Diff> diffsFromChange(ChangeInfo changeInfo, Map<String, List<CommentInfo>> changeInfoCommentsMap) {
+        return changeInfo.revisions
+                .entrySet()
+                .stream()
+                .map(entry -> fromRevision(entry.getValue(), changeInfoCommentsMap))
+                .collect(Collectors.toList());
+    }
+
+    private Diff fromRevision(RevisionInfo revisionInfo, Map<String, List<CommentInfo>> changeInfoCommentsMap) {
+        final Diff diff = new Diff();
+        diff.setCreatedTime(revisionInfo.created.toLocalDateTime());
+        List<File> files = revisionInfo.files
+                .entrySet()
+                .stream()
+                .map(entry -> fromFile(entry.getValue(), entry.getKey(), changeInfoCommentsMap.get(entry.getKey())))
+                .collect(Collectors.toList());
+
+        diff.setFiles(files);
+        return diff;
+    }
+
+    private File fromFile(FileInfo fileInfo, String currentFilename, List<CommentInfo> comments) {
+        File file = new File();
+        file.setNewFilename(currentFilename);
+        file.setOldFilename(fileInfo.oldPath);
+        file.setLinesInserted(fileInfo.linesInserted);
+        file.setLinesRemoved(fileInfo.linesDeleted);
+        file.setStatus(fromCharacter(fileInfo.status));
+        if (comments != null)
+            file.setComments(comments.stream().map(this::fromComment).collect(Collectors.toList()));
+        return file;
+    }
+
+    private Comment fromComment(CommentInfo commentInfo) {
+        Comment comment = new Comment();
+        comment.setAuthor(fromAccount(commentInfo.author));
+        comment.setText(commentInfo.message);
+        comment.setUpdatedTime(commentInfo.updated.toLocalDateTime());
+        return comment;
     }
 
     private User fromAccount(AccountInfo accountInfo) {

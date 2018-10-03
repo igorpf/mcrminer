@@ -33,6 +33,7 @@ public class MockCodeReviewMiningService extends AbstractCodeReviewMiningService
         Comment comment1 = new Comment();
         comment1.setText("Some comment");
         comment1.setAuthor(user);
+
         Comment comment2 = new Comment();
         comment2.setText("Some other comment");
         comment2.setAuthor(user);
@@ -56,10 +57,25 @@ public class MockCodeReviewMiningService extends AbstractCodeReviewMiningService
         review.setStatus(status);
         review.setDescription("very good");
         review.setAuthor(user);
+
+        ApprovalStatus status2 = new ApprovalStatus();
+        status2.setApproval(true);
+        status2.setValue(2);
+        status2.setLabel("+2");
         Review review2 = new Review();
-        review2.setStatus(status);
+        review2.setStatus(status2);
         review2.setDescription("awesome");
         review2.setAuthor(user);
-        return Arrays.asList(review, review2);
+
+        ApprovalStatus status3 = new ApprovalStatus();
+        status3.setApproval(true);
+        status3.setValue(1);
+        status3.setLabel("+1");
+        Review review3 = new Review();
+        review3.setStatus(status2);
+        review3.setDescription("so so");
+        review3.setAuthor(user);
+
+        return Arrays.asList(review, review2, review3);
     }
 }

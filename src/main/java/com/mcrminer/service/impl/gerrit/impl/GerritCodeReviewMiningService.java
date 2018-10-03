@@ -2,6 +2,8 @@ package com.mcrminer.service.impl.gerrit.impl;
 
 import com.google.gerrit.extensions.api.GerritApi;
 import com.google.gerrit.extensions.client.ListChangesOption;
+import com.google.gerrit.extensions.common.ChangeInfo;
+import com.google.gerrit.extensions.common.CommentInfo;
 import com.google.gerrit.extensions.common.ProjectInfo;
 import com.google.gerrit.extensions.restapi.RestApiException;
 import com.mcrminer.exceptions.ClientApiException;
@@ -20,8 +22,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service("gerritCodeReviewMiningService")
 public class GerritCodeReviewMiningService extends AbstractCodeReviewMiningService {
@@ -31,9 +34,17 @@ public class GerritCodeReviewMiningService extends AbstractCodeReviewMiningServi
     private static final String PROJECT_URL_FORMAT = "%s/%s";
     private static final String PROJECT_QUERY = "project:%s";
     private static final ListChangesOption[] REVIEW_REQUEST_OPTIONS = {
-            ListChangesOption.DETAILED_ACCOUNTS,
-            ListChangesOption.DETAILED_LABELS
+            ListChangesOption.DETAILED_ACCOUNTS
     };
+    private static final ListChangesOption[] REVIEW_OPTIONS = {
+            ListChangesOption.DETAILED_LABELS,
+            ListChangesOption.DETAILED_ACCOUNTS
+    };
+    private static final ListChangesOption[] DIFF_OPTIONS = {
+            ListChangesOption.ALL_FILES,
+            ListChangesOption.ALL_REVISIONS
+    };
+    private static final int QUERY_LIMIT = 5;
     @Autowired
     private GerritApiModelConverter modelConverter;
 
@@ -53,18 +64,43 @@ public class GerritCodeReviewMiningService extends AbstractCodeReviewMiningServi
         return fetchObjectHandlingException(() -> {
             GerritApi api = getGerritApi(authData);
             String projectQuery = String.format(PROJECT_QUERY, project.getCodeReviewToolId());
-            return modelConverter.fromChanges(api.changes().query(projectQuery).withOptions(REVIEW_REQUEST_OPTIONS).get());
+            return modelConverter.reviewRequestsFromChanges(api.changes().query(projectQuery)
+                    .withOptions(REVIEW_REQUEST_OPTIONS)
+                    .withLimit(QUERY_LIMIT)
+                    .get());
         });
     }
 
     @Override
     protected List<Diff> getDiffsForReviewRequest(ReviewRequest reviewRequest, AuthenticationData authData) {
-        return Collections.emptyList();
+        return fetchObjectHandlingException(() -> {
+            GerritApi api = getGerritApi(authData);
+            String projectQuery = String.format(PROJECT_QUERY, reviewRequest.getProject().getCodeReviewToolId());
+            List<ChangeInfo> changes = api.changes().query(projectQuery)
+                    .withOptions(DIFF_OPTIONS)
+                    .withLimit(QUERY_LIMIT)
+                    .get();
+            Map<ChangeInfo, Map<String, List<CommentInfo>>> changeInfoCommentsMap = new HashMap<>();
+            for (ChangeInfo change : changes) {
+                changeInfoCommentsMap.put(
+                        change,
+                        fetchObjectHandlingException( () -> api.changes().id(change.id).comments())
+                );
+            }
+            return modelConverter.diffsFromChanges(changes,changeInfoCommentsMap );
+        });
     }
 
     @Override
     protected List<Review> getReviewsForReviewRequest(ReviewRequest reviewRequest, AuthenticationData authData) {
-        return Collections.emptyList();
+        return fetchObjectHandlingException(() -> {
+            GerritApi api = getGerritApi(authData);
+            String projectQuery = String.format(PROJECT_QUERY, reviewRequest.getProject().getCodeReviewToolId());
+            return modelConverter.reviewsFromChanges(api.changes().query(projectQuery)
+                    .withOptions(REVIEW_OPTIONS)
+                    .withLimit(QUERY_LIMIT)
+                    .get());
+        });
     }
 
     private <T> T fetchObjectHandlingException(ApiSupplier<T> supplier) {

@@ -13,6 +13,17 @@ public final class ApprovalStatus {
     private boolean isApproval;
     private boolean isVeto;
 
+    public ApprovalStatus() {
+    }
+
+    public ApprovalStatus(String label, String description, Integer value, boolean isApproval, boolean isVeto) {
+        this.label = label;
+        this.description = description;
+        this.value = value;
+        this.isApproval = isApproval;
+        this.isVeto = isVeto;
+    }
+
     public String getLabel() {
         return label;
     }

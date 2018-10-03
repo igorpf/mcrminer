@@ -6,6 +6,7 @@ import com.mcrminer.service.AuthenticationData;
 import com.mcrminer.service.CodeReviewMiningService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
@@ -42,6 +43,8 @@ public abstract class AbstractCodeReviewMiningService implements CodeReviewMinin
     }
 
     private void saveReviewRequest(ReviewRequest reviewRequest, AuthenticationData authData) {
+        if (reviewRequest.getSubmitter() != null)
+            userRepository.save(reviewRequest.getSubmitter());
         reviewRequestRepository.save(reviewRequest);
         List<Diff> diffs = getDiffsForReviewRequest(reviewRequest, authData);
         for (Diff diff : diffs) {
@@ -57,24 +60,40 @@ public abstract class AbstractCodeReviewMiningService implements CodeReviewMinin
         }
         reviewRequest.setReviews(new HashSet<>(reviews));
 
-        if (reviewRequest.getSubmitter() != null)
-            userRepository.save(reviewRequest.getSubmitter());
         reviewRequestRepository.save(reviewRequest);
     }
 
     private void saveDiff(Diff diff) {
-        diff.getFiles().forEach(file -> {
-            saveComments(file.getComments());
+        Collection<File> files = diff.getFiles();
+        diff.setFiles(null);
+        diffRepository.save(diff);
+        files.forEach(file -> {
+            Collection<Comment> comments = file.getComments();
+            file.setComments(null);
+            file.setDiff(diff);
             fileRepository.save(file);
+            if (comments != null) {
+                saveComments(comments, file);
+                file.setComments(comments);
+            }
         });
+        diff.setFiles(files);
         diffRepository.save(diff);
     }
 
-    private void saveComments(Iterable<Comment> comments) {
+    private void saveComments(Iterable<Comment> comments, File file) {
         comments.forEach(comment -> {
-            userRepository.save(comment.getAuthor());
+            if (!commentAuthorIsAlreadySaved(comment))
+                userRepository.save(comment.getAuthor());
+            else if (comment.getAuthor() != null)
+                comment.setAuthor(userRepository.findByEmail(comment.getAuthor().getEmail()));
+            comment.setFile(file);
             commentRepository.save(comment);
         });
+    }
+
+    private boolean commentAuthorIsAlreadySaved(Comment comment) {
+        return comment.getAuthor() != null && !userRepository.existsByEmail(comment.getAuthor().getEmail());
     }
 
     private void saveReview(Review review) {
