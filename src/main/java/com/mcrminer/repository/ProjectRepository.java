@@ -5,8 +5,8 @@ import com.mcrminer.model.projections.ProjectProjection;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ProjectRepository extends JpaRepository <Project, Integer> {
+public interface ProjectRepository extends JpaRepository <Project, Long> {
 
     @EntityGraph(value = "withReviewRequests", type = EntityGraph.EntityGraphType.FETCH)
-    ProjectProjection getById(Integer id);
+    ProjectProjection getById(Long id);
 }

@@ -11,7 +11,7 @@ public final class File {
 
     @Id
     @GeneratedValue
-    private Integer id;
+    private Long id;
     @ManyToOne
     private Diff diff;
     @OneToMany
@@ -19,15 +19,15 @@ public final class File {
 
     private String newFilename;
     private String oldFilename; //if renamed
-    private Integer linesInserted;
-    private Integer linesRemoved;
+    private Long linesInserted;
+    private Long linesRemoved;
     private FileStatus status;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -63,19 +63,19 @@ public final class File {
         this.oldFilename = oldFilename;
     }
 
-    public Integer getLinesInserted() {
+    public Long getLinesInserted() {
         return linesInserted;
     }
 
-    public void setLinesInserted(Integer linesInserted) {
+    public void setLinesInserted(Long linesInserted) {
         this.linesInserted = linesInserted;
     }
 
-    public Integer getLinesRemoved() {
+    public Long getLinesRemoved() {
         return linesRemoved;
     }
 
-    public void setLinesRemoved(Integer linesRemoved) {
+    public void setLinesRemoved(Long linesRemoved) {
         this.linesRemoved = linesRemoved;
     }
 

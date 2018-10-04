@@ -134,8 +134,10 @@ public class DefaultGerritApiModelConverter implements GerritApiModelConverter {
         File file = new File();
         file.setNewFilename(currentFilename);
         file.setOldFilename(fileInfo.oldPath);
-        file.setLinesInserted(fileInfo.linesInserted);
-        file.setLinesRemoved(fileInfo.linesDeleted);
+        if (fileInfo.linesInserted != null)
+            file.setLinesInserted(Long.valueOf(fileInfo.linesInserted));
+        if (fileInfo.linesDeleted != null)
+            file.setLinesRemoved(Long.valueOf(fileInfo.linesDeleted));
         file.setStatus(fromCharacter(fileInfo.status));
         if (comments != null)
             file.setComments(comments.stream().map(this::fromComment).collect(Collectors.toList()));

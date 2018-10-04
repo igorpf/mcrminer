@@ -8,7 +8,7 @@ public final class Comment extends BaseAuditingEntity {
 
     @Id
     @GeneratedValue
-    private Integer id;
+    private Long id;
     @ManyToOne
     private File file;
     @ManyToOne
@@ -16,11 +16,11 @@ public final class Comment extends BaseAuditingEntity {
     @Lob
     private String text;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
