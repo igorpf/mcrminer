@@ -13,8 +13,6 @@ public final class ReviewRequest extends Reviewable {
     private User submitter;
     @OneToMany(cascade = CascadeType.ALL)
     private Set<Diff> diffs;
-    @OneToMany(cascade = CascadeType.ALL)
-    private Set<Review> reviews;
     @ManyToOne
     private Project project;
     private String branch;
@@ -37,14 +35,6 @@ public final class ReviewRequest extends Reviewable {
 
     public void setDiffs(Set<Diff> diffs) {
         this.diffs = diffs;
-    }
-
-    public Set<Review> getReviews() {
-        return reviews;
-    }
-
-    public void setReviews(Set<Review> reviews) {
-        this.reviews = reviews;
     }
 
     public Project getProject() {
