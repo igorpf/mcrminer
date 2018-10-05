@@ -24,16 +24,16 @@
          </rowConstraints>
          <children>
             <Label prefHeight="35.0" prefWidth="102.0" text="%project.url" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-            <TextField fx:id="projectUrl" layoutX="159.0" layoutY="27.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+            <TextField fx:id="projectUrl" layoutX="159.0" layoutY="27.0" GridPane.columnIndex="1" GridPane.rowIndex="0" text="https://gerrit-review.googlesource.com/"/>
 
              <Label prefHeight="35.0" prefWidth="102.0" text="%project.name" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-             <TextField fx:id="projectName" layoutX="159.0" layoutY="27.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+             <TextField fx:id="projectName" layoutX="159.0" layoutY="27.0" GridPane.columnIndex="1" GridPane.rowIndex="1" text="gerrit"/>
 
              <Label prefHeight="35.0" prefWidth="102.0" text="%user.username" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-             <TextField fx:id="username" layoutX="159.0" layoutY="27.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+             <TextField fx:id="username" layoutX="159.0" layoutY="27.0" GridPane.columnIndex="1" GridPane.rowIndex="2" text="git-igorpiresferreira.gmail.com"/>
 
              <Label prefHeight="35.0" prefWidth="102.0" text="%user.password" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-             <PasswordField fx:id="password" layoutX="159.0" layoutY="27.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+             <PasswordField fx:id="password" layoutX="159.0" layoutY="27.0" GridPane.columnIndex="1" GridPane.rowIndex="3" text="1/d12aeNJkVXVuExf6W-vNhaOaCpEGIV5MKXzEiAY0NDs"/>
          </children>
       </GridPane>
       <Button fx:id="searchButton" layoutX="135.0" layoutY="276.0" mnemonicParsing="false" onAction="#fetchProject" text="%button.search" />
