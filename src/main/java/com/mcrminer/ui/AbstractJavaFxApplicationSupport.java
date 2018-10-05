@@ -2,6 +2,7 @@ package com.mcrminer.ui;
 
 import javafx.application.Application;
 import org.springframework.boot.SpringApplication;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 
 public abstract class AbstractJavaFxApplicationSupport extends Application {
@@ -27,5 +28,9 @@ public abstract class AbstractJavaFxApplicationSupport extends Application {
 
         AbstractJavaFxApplicationSupport.savedArgs = args;
         Application.launch(appClass, args);
+    }
+
+    protected ApplicationContext getApplicationContext() {
+        return applicationContext;
     }
 }
