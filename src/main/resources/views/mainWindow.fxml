@@ -1,14 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.mcrminer.ui.controller.MainWindowController"
-            prefHeight="400.0" prefWidth="600.0">
+<AnchorPane prefHeight="400.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mcrminer.ui.controller.MainWindowController">
+   <children>
+      <GridPane layoutX="39.0" layoutY="60.0">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+         </rowConstraints>
+         <children>
+            <Label prefHeight="35.0" prefWidth="102.0" text="%project.url" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+            <TextField fx:id="projectUrl" layoutX="159.0" layoutY="27.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
+             <Label prefHeight="35.0" prefWidth="102.0" text="%project.name" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+             <TextField fx:id="projectName" layoutX="159.0" layoutY="27.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+             <Label prefHeight="35.0" prefWidth="102.0" text="%user.username" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+             <TextField fx:id="username" layoutX="159.0" layoutY="27.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+             <Label prefHeight="35.0" prefWidth="102.0" text="%user.password" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+             <PasswordField fx:id="password" layoutX="159.0" layoutY="27.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+         </children>
+      </GridPane>
+      <Button fx:id="searchButton" layoutX="135.0" layoutY="276.0" mnemonicParsing="false" onAction="#fetchProject" text="%button.search" />
+   </children>
 </AnchorPane>

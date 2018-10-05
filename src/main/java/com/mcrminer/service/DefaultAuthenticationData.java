@@ -1,12 +1,18 @@
 package com.mcrminer.service;
 
-public class DefaultAuthenticationData implements AuthenticationData{
+public class DefaultAuthenticationData implements AuthenticationData {
 
     private String username;
     private String password;
     private String host;
 
     public DefaultAuthenticationData() {
+    }
+
+    public DefaultAuthenticationData(String username, String password, String host) {
+        this.username = username;
+        this.password = password;
+        this.host = host;
     }
 
     public void setUsername(String username) {
