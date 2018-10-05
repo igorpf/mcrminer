@@ -24,18 +24,19 @@
          </rowConstraints>
          <children>
             <Label prefHeight="35.0" prefWidth="102.0" text="%project.url" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-            <TextField fx:id="projectUrl" layoutX="159.0" layoutY="27.0" GridPane.columnIndex="1" GridPane.rowIndex="0" text="https://gerrit-review.googlesource.com/"/>
+            <TextField fx:id="projectUrl" layoutX="159.0" layoutY="27.0" text="https://gerrit-review.googlesource.com/" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
              <Label prefHeight="35.0" prefWidth="102.0" text="%project.name" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-             <TextField fx:id="projectName" layoutX="159.0" layoutY="27.0" GridPane.columnIndex="1" GridPane.rowIndex="1" text="gerrit"/>
+             <TextField fx:id="projectName" layoutX="159.0" layoutY="27.0" text="gerrit" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
              <Label prefHeight="35.0" prefWidth="102.0" text="%user.username" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-             <TextField fx:id="username" layoutX="159.0" layoutY="27.0" GridPane.columnIndex="1" GridPane.rowIndex="2" text="git-igorpiresferreira.gmail.com"/>
+             <TextField fx:id="username" layoutX="159.0" layoutY="27.0" text="git-igorpiresferreira.gmail.com" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
              <Label prefHeight="35.0" prefWidth="102.0" text="%user.password" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-             <PasswordField fx:id="password" layoutX="159.0" layoutY="27.0" GridPane.columnIndex="1" GridPane.rowIndex="3" text="1/d12aeNJkVXVuExf6W-vNhaOaCpEGIV5MKXzEiAY0NDs"/>
+             <PasswordField fx:id="password" layoutX="159.0" layoutY="27.0" text="1/d12aeNJkVXVuExf6W-vNhaOaCpEGIV5MKXzEiAY0NDs" GridPane.columnIndex="1" GridPane.rowIndex="3" />
          </children>
       </GridPane>
       <Button fx:id="searchButton" layoutX="135.0" layoutY="276.0" mnemonicParsing="false" onAction="#fetchProject" text="%button.search" />
+      <Label layoutX="66.0" layoutY="220.0" fx:id="totalTime"/>
    </children>
 </AnchorPane>
