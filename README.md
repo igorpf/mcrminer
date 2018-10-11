@@ -29,3 +29,7 @@ Otherwise the CSV exporter won't recognize the field
 ### Running from command line
 
 ` $ ./gradlew bootRun`
+### Branching Strategy
+- For core features, use **master** branch
+- For UI specific changes, use either **ui-desktop** or **ui-web**
+- Changes are **never** pushed from UI branches to **master**

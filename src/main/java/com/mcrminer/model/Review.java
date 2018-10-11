@@ -12,7 +12,7 @@ public final class Review extends BaseAuditingEntity {
     private Reviewable reviewed;
     @Id
     @GeneratedValue
-    private Integer id;
+    private Long id;
     @ManyToOne
     private ApprovalStatus status;
     private String description;
@@ -33,11 +33,11 @@ public final class Review extends BaseAuditingEntity {
         this.reviewed = reviewed;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

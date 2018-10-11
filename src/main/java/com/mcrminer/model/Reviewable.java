@@ -3,20 +3,32 @@ package com.mcrminer.model;
 
 import javax.persistence.*;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Reviewable extends BaseAuditingEntity {
     @Id
     @GeneratedValue
-    private Integer id;
+    private Long id;
 
-    public Integer getId() {
+    @OneToMany
+    private Set<Review> reviews;
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public Set<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(Set<Review> reviews) {
+        this.reviews = reviews;
     }
 
     @Override
