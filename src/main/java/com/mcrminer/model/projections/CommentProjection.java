@@ -1,14 +1,14 @@
 package com.mcrminer.model.projections;
 
-import lombok.Builder;
-import lombok.RequiredArgsConstructor;
-import lombok.Value;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Builder
-@Value
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class CommentProjection {
     Integer id, fileId;
     String authorEmail, text;

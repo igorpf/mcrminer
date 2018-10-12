@@ -58,8 +58,8 @@ public class DefaultDomainObjectsFactory implements DomainObjectsFactory {
     @Override
     public File createFile(String filename) {
         File file = new File();
-        file.setLinesInserted(1);
-        file.setLinesRemoved(2);
+        file.setLinesInserted(1L);
+        file.setLinesRemoved(2L);
         file.setStatus(FileStatus.MODIFIED);
         file.setNewFilename(filename);
         return fileRepository.save(file);
