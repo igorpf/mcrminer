@@ -49,12 +49,4 @@ public class ProjectRepositoryIntegrationTest {
         Project savedProject = projectRepository.getOne(project.getId());
         assertThat(savedProject, equalTo(project));
     }
-
-    @Test
-    public void testGetProjectProjections() {
-        ProjectProjection projection = projectRepository.getById(project.getId());
-        assertThat(projection.getName(), equalTo(project.getName()));
-        assertThat(projection.getId(), equalTo(project.getId()));
-        assertThat(projection.getUrlPath(), equalTo(project.getUrlPath()));
-    }
 }
