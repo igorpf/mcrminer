@@ -1,8 +1,9 @@
-package com.mcrminer.service;
+package com.mcrminer.export;
 
+import com.mcrminer.export.ExportService;
 import com.mcrminer.model.enums.ReviewRequestStatus;
 import com.mcrminer.model.projections.ReviewRequestProjection;
-import com.mcrminer.service.impl.DefaultExportService;
+import com.mcrminer.export.impl.DefaultExportService;
 import org.junit.Before;
 import org.junit.Test;
 
