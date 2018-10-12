@@ -11,6 +11,7 @@ import com.mcrminer.model.Diff;
 import com.mcrminer.model.Project;
 import com.mcrminer.model.Review;
 import com.mcrminer.model.ReviewRequest;
+import com.mcrminer.repository.*;
 import com.mcrminer.service.AuthenticationData;
 import com.mcrminer.service.impl.AbstractCodeReviewMiningService;
 import com.mcrminer.service.impl.gerrit.ApiSupplier;
@@ -45,8 +46,18 @@ public class GerritCodeReviewMiningService extends AbstractCodeReviewMiningServi
             ListChangesOption.ALL_REVISIONS
     };
     private static final int QUERY_LIMIT = 5;
-    @Autowired
+
     private GerritApiModelConverter modelConverter;
+
+    @Autowired
+    public GerritCodeReviewMiningService(ProjectRepository projectRepository, ReviewRequestRepository reviewRequestRepository,
+                                         DiffRepository diffRepository, CommentRepository commentRepository,
+                                         UserRepository userRepository, FileRepository fileRepository,
+                                         ReviewRepository reviewRepository, ApprovalStatusRepository approvalStatusRepository,
+                                         GerritApiModelConverter modelConverter){
+        super(projectRepository, reviewRequestRepository, diffRepository, commentRepository, userRepository, fileRepository, reviewRepository, approvalStatusRepository);
+        this.modelConverter = modelConverter;
+    }
 
     @Override
     protected Project getProject(String projectId, AuthenticationData authData) {

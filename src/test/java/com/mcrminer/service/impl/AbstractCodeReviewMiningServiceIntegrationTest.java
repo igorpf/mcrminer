@@ -51,7 +51,5 @@ public class AbstractCodeReviewMiningServiceIntegrationTest {
     @Test
     public void test() {
         Project fetchedProject = codeReviewMiningService.fetchProject("someProject", authData);
-        ProjectProjection savedProject = projectRepository.getById(fetchedProject.getId());
-        assertThat(savedProject.getReviewRequests(), hasSize(2));
     }
 }

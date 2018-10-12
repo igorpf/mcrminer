@@ -1,11 +1,22 @@
 package com.mcrminer.model.projections;
 
-import java.util.List;
+import com.mcrminer.model.enums.ReviewRequestStatus;
+import lombok.*;
 
-public interface ReviewRequestProjection {
-    String getBranch();
-    String getDescription();
-    String getCommitId();
-    boolean isPublic();
-    List<DiffProjection> getDiffs();
+import java.time.LocalDateTime;
+
+@Builder
+@Value
+@RequiredArgsConstructor
+public class ReviewRequestProjection {
+    Integer projectId;
+    String branch, commitId, description, submitterEmail;
+    @Getter(AccessLevel.NONE)
+    boolean isPublic;
+    ReviewRequestStatus status;
+    LocalDateTime createdTime, updatedTime;
+
+    public boolean getIsPublic() {
+        return isPublic;
+    }
 }

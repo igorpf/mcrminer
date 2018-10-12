@@ -12,12 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.annotation.Resource;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 
 @SpringBootTest
@@ -28,7 +28,7 @@ public class ProjectRepositoryIntegrationTest {
     @Autowired
     private ProjectRepository projectRepository;
 
-    @Autowired
+    @Resource(name = "persistentObjectsDomainFactory")
     private DomainObjectsFactory domainObjectsFactory;
 
     private Project project;
@@ -48,14 +48,5 @@ public class ProjectRepositoryIntegrationTest {
     public void testGetProject() {
         Project savedProject = projectRepository.getOne(project.getId());
         assertThat(savedProject, equalTo(project));
-    }
-
-    @Test
-    public void testGetProjectProjections() {
-        ProjectProjection projection = projectRepository.getById(project.getId());
-        assertThat(projection.getName(), equalTo(project.getName()));
-        assertThat(projection.getId(), equalTo(project.getId()));
-        assertThat(projection.getUrlPath(), equalTo(project.getUrlPath()));
-        assertThat(projection.getReviewRequests(), hasSize(project.getReviewRequests().size()));
     }
 }
