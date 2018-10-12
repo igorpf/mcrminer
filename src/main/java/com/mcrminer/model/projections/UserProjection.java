@@ -1,4 +1,12 @@
 package com.mcrminer.model.projections;
 
-public interface UserProjection {
+import lombok.Builder;
+import lombok.RequiredArgsConstructor;
+import lombok.Value;
+
+@Builder
+@Value
+@RequiredArgsConstructor
+public class UserProjection {
+    String email, fullname, username;
 }

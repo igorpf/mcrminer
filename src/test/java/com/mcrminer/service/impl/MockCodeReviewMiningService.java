@@ -1,6 +1,7 @@
 package com.mcrminer.service.impl;
 
 import com.mcrminer.model.*;
+import com.mcrminer.repository.*;
 import com.mcrminer.service.AuthenticationData;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +11,10 @@ import java.util.List;
 
 @Service("mockCodeReviewMiningService")
 public class MockCodeReviewMiningService extends AbstractCodeReviewMiningService {
+
+    public MockCodeReviewMiningService(ProjectRepository projectRepository, ReviewRequestRepository reviewRequestRepository, DiffRepository diffRepository, CommentRepository commentRepository, UserRepository userRepository, FileRepository fileRepository, ReviewRepository reviewRepository, ApprovalStatusRepository approvalStatusRepository) {
+        super(projectRepository, reviewRequestRepository, diffRepository, commentRepository, userRepository, fileRepository, reviewRepository, approvalStatusRepository);
+    }
 
     @Override
     protected Project getProject(String projectId, AuthenticationData authData) {

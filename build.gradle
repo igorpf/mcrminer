@@ -3,6 +3,8 @@ buildscript {
 		springBootVersion = '2.0.3.RELEASE'
         sonarQubePluginVersion = '2.6.2'
         gerritApiVersion = '0.8.15'
+		openCsvVersion = '4.2'
+		lombokVersion = '1.18.2'
 	}
 	repositories {
         maven {
@@ -14,6 +16,10 @@ buildscript {
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:${sonarQubePluginVersion}"
 	}
 }
+plugins {
+    id 'net.ltgt.apt' version '0.10'
+}
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
@@ -23,8 +29,6 @@ apply plugin: 'io.spring.dependency-management'
 group = 'com.mcrminer'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
-
-
 
 repositories {
 	mavenCentral()
@@ -47,6 +51,12 @@ dependencies {
         exclude group: 'com.zaxxer', module: 'HikariCP'
         exclude group: 'org.hibernate', module: 'hibernate-core'
     }
+	compile("com.opencsv:opencsv:${openCsvVersion}")
+
+	compileOnly "org.projectlombok:lombok:${lombokVersion}"
+	apt "org.projectlombok:lombok:${lombokVersion}"
+	testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
+	testApt "org.projectlombok:lombok:${lombokVersion}"
 
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('org.springframework.security:spring-security-test')
