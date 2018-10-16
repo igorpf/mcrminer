@@ -23,4 +23,9 @@ public class CommentPerspectiveService extends AbstractPerspectiveService<Commen
     protected Iterable<PerspectiveCreationStrategy<Comment, CommentPerspective>> getCreationStrategies() {
         return strategies;
     }
+
+    @Override
+    public List<Comment> getRootEntitiesForProject(Long projectId) {
+        return null;
+    }
 }
