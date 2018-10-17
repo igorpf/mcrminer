@@ -18,7 +18,7 @@ public class CommentAssociationsPerspectiveCreationStrategy implements Perspecti
         perspective.setFilename(comment.getFile().getNewFilename());
         perspective.setId(comment.getId());
         fillAuthor(perspective, comment.getAuthor());
-        fillReviewRequestSubmitter(perspective, comment.getAuthor());
+        fillReviewRequestSubmitter(perspective, comment.getFile().getDiff().getReviewRequest().getSubmitter());
         fillReviewRequest(comment, perspective);
         fillProject(comment, perspective);
     }

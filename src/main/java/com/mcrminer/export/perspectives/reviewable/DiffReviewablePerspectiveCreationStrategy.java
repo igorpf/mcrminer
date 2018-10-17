@@ -3,12 +3,14 @@ package com.mcrminer.export.perspectives.reviewable;
 import com.mcrminer.export.PerspectiveCreationStrategy;
 import com.mcrminer.model.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 
 @Service
 public class DiffReviewablePerspectiveCreationStrategy implements PerspectiveCreationStrategy<Reviewable, ReviewablePerspective> {
 
+    @Transactional
     @Override
     public void fillPerspective(Reviewable rootEntity, ReviewablePerspective perspective) {
         if (rootEntity instanceof Diff) {
