@@ -56,7 +56,9 @@ public class DefaultDomainObjectsFactory implements DomainObjectsFactory {
         reviewRequest.setUpdatedTime(LocalDateTime.now());
         reviewRequest.setCreatedTime(LocalDateTime.now().minusMonths(2));
         reviewRequest.setDescription("new software version");
-        reviewRequest.setSubmitter(createUser("user@user.com"));
+        User submitter = createUser("user@user.com");
+        reviewRequest.setSubmitter(submitter);
+        saveReviewRequestToUser(submitter, reviewRequest);
         reviewRequest.setCommitId("0xdeadbeef");
         reviewRequest.setPublic(true);
         reviewRequest.setStatus(ReviewRequestStatus.MERGED);
@@ -97,6 +99,11 @@ public class DefaultDomainObjectsFactory implements DomainObjectsFactory {
                 createReview("cool changes", diff)
         ));
         return diffRepository.save(diff);
+    }
+
+    private void saveReviewRequestToUser(User user, ReviewRequest reviewRequest) {
+        user.setReviewRequests(Collections.singleton(reviewRequest));
+        userRepository.save(user);
     }
 
     @Override
