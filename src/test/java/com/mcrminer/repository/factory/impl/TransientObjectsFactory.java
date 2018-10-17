@@ -38,6 +38,7 @@ public class TransientObjectsFactory implements DomainObjectsFactory {
         ReviewRequest reviewRequest = new ReviewRequest();
         reviewRequest.setProject(project);
         reviewRequest.setId(1L);
+        reviewRequest.setReviews(Collections.singleton(createReview("nice", reviewRequest)));
         reviewRequest.setDiffs(Collections.singleton(createDiff(reviewRequest)));
         reviewRequest.setUpdatedTime(LocalDateTime.now());
         reviewRequest.setCreatedTime(LocalDateTime.now().minusMonths(2));
