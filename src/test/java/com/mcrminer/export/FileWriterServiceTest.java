@@ -1,9 +1,8 @@
 package com.mcrminer.export;
 
-import com.mcrminer.export.ExportService;
 import com.mcrminer.model.enums.ReviewRequestStatus;
 import com.mcrminer.model.projections.ReviewRequestProjection;
-import com.mcrminer.export.impl.DefaultExportService;
+import com.mcrminer.export.impl.DefaultFileWriterService;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,10 +16,10 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class ExportServiceTest {
+public class FileWriterServiceTest {
     private static final String FIELD_SEPARATOR = ",";
     private static final String LINE_FEED = "\n";
-    private ExportService exportService = new DefaultExportService();
+    private FileWriterService fileWriterService = new DefaultFileWriterService();
     private ReviewRequestProjection reviewRequest1, reviewRequest2;
     private String csvFileContent;
 
@@ -51,8 +50,14 @@ public class ExportServiceTest {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         PrintWriter printWriter = new PrintWriter(outputStream);
 
+        String[] columns = new String[]{"projectId", "branch", "commitId", "description", "submitterEmail", "isPublic", "status", "createdTime", "updatedTime"};
         List<ReviewRequestProjection> reviews = Arrays.asList(reviewRequest1, reviewRequest2);
-        exportService.exportAsCsv(printWriter, reviews, ReviewRequestProjection.class);
+        DefaultPerspectiveExportConfigurationParameters parameters = DefaultPerspectiveExportConfigurationParameters
+                .builder()
+                .perspectiveClass(ReviewRequestProjection.class)
+                .columns(columns)
+                .build();
+        fileWriterService.exportAsCsv(printWriter, reviews, parameters);
         assertThat(outputStream.toString(), equalTo(csvFileContent));
     }
 
