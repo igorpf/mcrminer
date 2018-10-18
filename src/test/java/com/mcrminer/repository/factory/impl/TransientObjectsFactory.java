@@ -3,67 +3,52 @@ package com.mcrminer.repository.factory.impl;
 import com.mcrminer.model.*;
 import com.mcrminer.model.enums.FileStatus;
 import com.mcrminer.model.enums.ReviewRequestStatus;
-import com.mcrminer.repository.*;
 import com.mcrminer.repository.factory.DomainObjectsFactory;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 
-@Service("persistentObjectsDomainFactory")
-@AllArgsConstructor(onConstructor = @__(@Autowired))
-public class DefaultDomainObjectsFactory implements DomainObjectsFactory {
-
-    private ProjectRepository projectRepository;
-    private ReviewRequestRepository reviewRequestRepository;
-    private CommentRepository commentRepository;
-    private UserRepository userRepository;
-    private FileRepository fileRepository;
-    private DiffRepository diffRepository;
-    private ReviewRepository reviewRepository;
-    private ApprovalStatusRepository approvalStatusRepository;
-
+public class TransientObjectsFactory implements DomainObjectsFactory {
     @Override
     public Project createProject(String urlPath, String name) {
         Project project = new Project();
         project.setUrlPath(urlPath);
         project.setName(name);
         project.setCodeReviewToolId("gerrit");
-        return projectRepository.save(project);
+        project.setId(1L);
+        return project;
     }
 
     @Override
     public Review createReview(String description, Reviewable reviewed) {
         Review review = new Review();
+        review.setId(1L);
         review.setReviewed(reviewed);
         review.setAuthor(createUser("review@example.com"));
         review.setDescription(description);
         review.setCreatedTime(LocalDateTime.now().minusWeeks(1));
         review.setUpdatedTime(LocalDateTime.now());
         review.setStatus(createApprovalStatus());
-        return reviewRepository.save(review);
+        return review;
     }
 
     @Override
     public ReviewRequest createReviewRequest(Project project) {
         ReviewRequest reviewRequest = new ReviewRequest();
-        reviewRequestRepository.save(reviewRequest);
         reviewRequest.setProject(project);
+        reviewRequest.setId(1L);
+        reviewRequest.setReviews(Collections.singleton(createReview("nice", reviewRequest)));
         reviewRequest.setDiffs(Collections.singleton(createDiff(reviewRequest)));
         reviewRequest.setUpdatedTime(LocalDateTime.now());
         reviewRequest.setCreatedTime(LocalDateTime.now().minusMonths(2));
         reviewRequest.setDescription("new software version");
-        User submitter = createUser("user@user.com");
-        reviewRequest.setSubmitter(submitter);
-        saveReviewRequestToUser(submitter, reviewRequest);
+        reviewRequest.setSubmitter(createUser("user@user.com"));
         reviewRequest.setCommitId("0xdeadbeef");
         reviewRequest.setPublic(true);
         reviewRequest.setStatus(ReviewRequestStatus.MERGED);
         reviewRequest.setBranch("master");
-        return reviewRequestRepository.save(reviewRequest);
+        return reviewRequest;
     }
 
     @Override
@@ -72,12 +57,13 @@ public class DefaultDomainObjectsFactory implements DomainObjectsFactory {
         comment.setText(text);
         comment.setAuthor(createUser("user@example.com"));
         comment.setFile(file);
-        return commentRepository.save(comment);
+        comment.setId(1L);
+        return comment;
     }
 
     @Override
     public Comment createComment(String text) {
-        Project project = createProject("http://default.com", "defaultproject");
+        Project project = createProject("http://default.com", "transient");
         ReviewRequest reviewRequest = createReviewRequest(project);
         Diff diff = createDiff(reviewRequest);
         File file = createFile("somefile", diff);
@@ -87,7 +73,7 @@ public class DefaultDomainObjectsFactory implements DomainObjectsFactory {
     @Override
     public Diff createDiff(ReviewRequest reviewRequest) {
         Diff diff = new Diff();
-        diffRepository.save(diff);
+        diff.setId(2L);
         diff.setReviewRequest(reviewRequest);
         diff.setCreatedTime(LocalDateTime.now().minusDays(2));
         diff.setUpdatedTime(LocalDateTime.now());
@@ -98,27 +84,22 @@ public class DefaultDomainObjectsFactory implements DomainObjectsFactory {
         diff.setReviews(Collections.singleton(
                 createReview("cool changes", diff)
         ));
-        return diffRepository.save(diff);
-    }
-
-    private void saveReviewRequestToUser(User user, ReviewRequest reviewRequest) {
-        user.setReviewRequests(Collections.singleton(reviewRequest));
-        userRepository.save(user);
+        return diff;
     }
 
     @Override
     public User createUser(String email) {
         User user = new User();
         user.setEmail(email);
-        user.setFullname("Example user");
+        user.setFullname("transient user");
         user.setUsername("someusername");
-        return userRepository.save(user);
+        return user;
     }
 
     @Override
     public File createFile(String filename, Diff diff) {
         File file = new File();
-        fileRepository.save(file);
+        file.setId(2L);
         file.setLinesInserted(1L);
         file.setLinesRemoved(2L);
         file.setStatus(FileStatus.MODIFIED);
@@ -128,10 +109,10 @@ public class DefaultDomainObjectsFactory implements DomainObjectsFactory {
                 createComment("this is not ok", file)
         ));
         file.setDiff(diff);
-        return fileRepository.save(file);
+        return file;
     }
 
     private ApprovalStatus createApprovalStatus() {
-        return approvalStatusRepository.save(new ApprovalStatus("label", "cool", 2, true, false));
+        return new ApprovalStatus("label", "cool", 2, true, false);
     }
 }
