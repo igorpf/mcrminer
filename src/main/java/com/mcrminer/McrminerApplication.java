@@ -30,7 +30,9 @@ public class McrminerApplication extends AbstractJavaFxApplicationSupport {
 		loader.setLocation(getClass().getClassLoader().getResource("views/MainWindow.fxml"));
 		loader.setControllerFactory(clazz -> getApplicationContext().getBean(clazz));
 		loader.setResources(ResourceBundle.getBundle("bundles.messages"));
-		stage.setScene(new Scene(loader.load()));
+		Scene scene = new Scene(loader.load());
+		scene.getStylesheets().add(getClass().getClassLoader().getResource("css/mainWindow.css").toExternalForm());
+		stage.setScene(scene);
 		stage.setResizable(true);
 		stage.centerOnScreen();
 		stage.show();

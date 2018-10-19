@@ -1,6 +1,6 @@
-package com.mcrminer.ui.controller.localization.impl;
+package com.mcrminer.ui.localization.impl;
 
-import com.mcrminer.ui.controller.localization.LocalizationService;
+import com.mcrminer.ui.localization.LocalizationService;
 import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;

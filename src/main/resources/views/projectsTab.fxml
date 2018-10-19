@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.mcrminer.ui.controller.ProjectsTabController"
+            prefWidth="600.0">
+    <children>
+        <ScrollPane fx:id="projectScrollPane" fitToHeight="true"  GridPane.columnIndex="0" GridPane.rowIndex="0" >
+            <content>
+                <VBox fx:id="projectVBox">
+                    <children>
+                        <ListView fx:id="projectList" >
+                        </ListView>
+                    </children>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </children>
+</GridPane>

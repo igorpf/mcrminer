@@ -1,4 +1,4 @@
-package com.mcrminer.ui.controller.localization;
+package com.mcrminer.ui.localization;
 
 public interface LocalizationService {
     String getMessage(String key, Object... args);
