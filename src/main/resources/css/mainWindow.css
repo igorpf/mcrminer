@@ -1,3 +1,12 @@
 .tabPane {
-    width: 100%;
+    -fx-min-width: 1024px;
+}
+
+.perspectivesTabPane {
+    -fx-max-width: 500px;
+    -fx-tab-max-width: 100px;
+}
+
+.label {
+    -fx-label-padding: 8px;
 }

@@ -4,12 +4,12 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.mcrminer.ui.controller.ProjectsTabController"
-            prefWidth="600.0">
+<HBox xmlns="http://javafx.com/javafx"
+          xmlns:fx="http://javafx.com/fxml"
+          fx:controller="com.mcrminer.ui.controller.ProjectsTabController"
+          prefWidth="600.0">
     <children>
-        <ScrollPane fx:id="projectScrollPane" fitToHeight="true"  GridPane.columnIndex="0" GridPane.rowIndex="0" >
+        <ScrollPane fx:id="projectScrollPane" fitToHeight="true" >
             <content>
                 <VBox fx:id="projectVBox">
                     <children>
@@ -19,5 +19,15 @@
                 </VBox>
             </content>
         </ScrollPane>
+
+        <VBox>
+            <children>
+                <Label text="%tab.projects.export.select.label"/>
+                <ChoiceBox fx:id="perspectivesChoiceBox"/>
+            </children>
+        </VBox>
+
+        <ScrollPane fx:id="statisticsScrollPane" fitToHeight="true"  >
+        </ScrollPane>
     </children>
-</GridPane>
+</HBox>

@@ -3,11 +3,11 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mcrminer.ui.controller.MainWindowController">
+<VBox prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mcrminer.ui.controller.MainWindowController">
    <children>
-       <MenuBar></MenuBar>
+       <MenuBar />
        <TabPane styleClass="tabPane" tabClosingPolicy="UNAVAILABLE">
           <tabs>
               <Tab fx:id="importTab" text="%tab.import.title">
@@ -19,4 +19,4 @@
           </tabs>
        </TabPane>
    </children>
-</AnchorPane>
+</VBox>
