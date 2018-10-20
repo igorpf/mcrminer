@@ -7,6 +7,9 @@
 <?import javafx.scene.layout.VBox?>
 
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Button?>
 <HBox styleClass="hBox" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mcrminer.ui.controller.ProjectsTabController">
     <children>
         <ScrollPane fx:id="projectScrollPane" fitToHeight="true">
@@ -22,26 +25,32 @@
 
         <VBox styleClass="vBox">
             <children>
-                <Label text="%tab.projects.export.select.label" />
                 <ComboBox fx:id="perspectivesChoiceBox" />
-                <HBox styleClass="hBox">
+                <HBox styleClass="perspectiveHBox">
                     <children>
-                        <ScrollPane fx:id="perspectiveAttributesScrollPane" fitToHeight="true">
-                            <content>
-                                <VBox styleClass="vBox" fx:id="perspectiveAttributesVBox">
-                                    <children>
-                                        <ListView fx:id="perspectiveAttributesList" prefHeight="719.0" prefWidth="248.0">
-                                        </ListView>
-                                    </children>
-                                </VBox>
-                            </content>
-                        </ScrollPane>
+                        <ListView fx:id="perspectiveAttributesList" prefHeight="719.0" prefWidth="248.0">
+                        </ListView>
 
-                        <VBox styleClass="vBox">
+                        <GridPane styleClass="gridPane">
                             <children>
-                                <Label text="%tab.projects.export.form.filename.label" />
+                                <Label text="%tab.projects.export.form.filename.label" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                                <TextField GridPane.columnIndex="1" GridPane.rowIndex="0" fx:id="filename" text="export.csv"/>
+
+                                <Label text="%tab.projects.export.form.separator.label" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                                <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" fx:id="separator" text=","/>
+
+                                <Label text="%tab.projects.export.form.quote.label" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                                <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" fx:id="quote"/>
+
+                                <Label text="%tab.projects.export.form.lineend.label" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                                <TextField GridPane.columnIndex="1" GridPane.rowIndex="3" fx:id="lineEnd" text="\\n"/>
+
+                                <Label text="%tab.projects.export.form.escape.label" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                                <TextField GridPane.columnIndex="1" GridPane.rowIndex="4" fx:id="escape"/>
+
+                                <Button text="%tab.projects.button.export" GridPane.columnIndex="1" GridPane.rowIndex="5" disable="true"/>
                             </children>
-                        </VBox>
+                        </GridPane>
                     </children>
                 </HBox>
             </children>

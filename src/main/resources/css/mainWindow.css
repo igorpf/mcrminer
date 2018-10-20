@@ -14,3 +14,11 @@
 .vBox, .hBox {
     -fx-padding: 16px;
 }
+
+.perspectiveHBox {
+    -fx-padding: 16px 0;
+}
+
+.gridPane {
+    -fx-padding: 10px;
+}

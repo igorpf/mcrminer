@@ -17,6 +17,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.CheckBoxListCell;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -45,6 +46,8 @@ public class ProjectsTabController {
     private ComboBox<PerspectiveChoice> perspectivesChoiceBox;
     @FXML
     private ListView<String> perspectiveAttributesList;
+    @FXML
+    private TextField filename, quote, escape, lineEnd, separator;
 
     @FXML
     public void initialize() {
