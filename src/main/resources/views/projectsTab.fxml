@@ -1,33 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
-<HBox xmlns="http://javafx.com/javafx"
-          xmlns:fx="http://javafx.com/fxml"
-          fx:controller="com.mcrminer.ui.controller.ProjectsTabController"
-          prefWidth="600.0">
+<?import javafx.scene.control.ComboBox?>
+<HBox styleClass="hBox" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mcrminer.ui.controller.ProjectsTabController">
     <children>
-        <ScrollPane fx:id="projectScrollPane" fitToHeight="true" >
+        <ScrollPane fx:id="projectScrollPane" fitToHeight="true">
             <content>
                 <VBox fx:id="projectVBox">
                     <children>
-                        <ListView fx:id="projectList" >
+                        <ListView fx:id="projectList" prefHeight="769.0" prefWidth="248.0">
                         </ListView>
                     </children>
                 </VBox>
             </content>
         </ScrollPane>
 
-        <VBox>
+        <VBox styleClass="vBox">
             <children>
-                <Label text="%tab.projects.export.select.label"/>
-                <ChoiceBox fx:id="perspectivesChoiceBox"/>
+                <Label text="%tab.projects.export.select.label" />
+                <ComboBox fx:id="perspectivesChoiceBox" />
+                <HBox styleClass="hBox">
+                    <children>
+                        <ScrollPane fx:id="perspectiveAttributesScrollPane" fitToHeight="true">
+                            <content>
+                                <VBox styleClass="vBox" fx:id="perspectiveAttributesVBox">
+                                    <children>
+                                        <ListView fx:id="perspectiveAttributesList" prefHeight="719.0" prefWidth="248.0">
+                                        </ListView>
+                                    </children>
+                                </VBox>
+                            </content>
+                        </ScrollPane>
+
+                        <VBox styleClass="vBox">
+                            <children>
+                                <Label text="%tab.projects.export.form.filename.label" />
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
             </children>
         </VBox>
 
-        <ScrollPane fx:id="statisticsScrollPane" fitToHeight="true"  >
+        <ScrollPane fx:id="statisticsScrollPane" fitToHeight="true" prefHeight="768.0" prefWidth="272.0">
         </ScrollPane>
     </children>
 </HBox>

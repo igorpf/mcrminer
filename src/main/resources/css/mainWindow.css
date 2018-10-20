@@ -10,3 +10,7 @@
 .label {
     -fx-label-padding: 8px;
 }
+
+.vBox, .hBox {
+    -fx-padding: 16px;
+}
