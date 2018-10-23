@@ -1,5 +1,8 @@
 package com.mcrminer.ui.controller;
 
+import com.mcrminer.export.DefaultPerspectiveExportConfigurationParameters;
+import com.mcrminer.export.PerspectiveExportConfigurationParameters;
+import com.mcrminer.export.perspectives.PerspectiveExportService;
 import com.mcrminer.export.perspectives.author.AuthorPerspective;
 import com.mcrminer.export.perspectives.comment.CommentPerspective;
 import com.mcrminer.export.perspectives.enums.PerspectiveType;
@@ -14,14 +17,14 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxListCell;
+import javafx.scene.layout.HBox;
+import javafx.stage.FileChooser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
@@ -30,16 +33,21 @@ import java.util.stream.Collectors;
 @Component
 public class ProjectsTabController {
 
-    private ProjectRepository projectRepository;
-    private LocalizationService localizationService;
+    private final ProjectRepository projectRepository;
+    private final LocalizationService localizationService;
+    private final PerspectiveExportService perspectiveExportService;
 
     @Autowired
     public ProjectsTabController(ProjectRepository projectRepository,
-                                 LocalizationService localizationService) {
+                                 LocalizationService localizationService,
+                                 PerspectiveExportService perspectiveExportService) {
         this.projectRepository = projectRepository;
         this.localizationService = localizationService;
+        this.perspectiveExportService = perspectiveExportService;
     }
 
+    @FXML
+    private HBox mainHBox;
     @FXML
     private ListView<Project> projectList;
     @FXML
@@ -47,12 +55,60 @@ public class ProjectsTabController {
     @FXML
     private ListView<String> perspectiveAttributesList;
     @FXML
-    private TextField filename, quote, escape, lineEnd, separator;
+    private TextField quote, escape, lineEnd, separator;
+    @FXML
+    private Button exportButton, filenameButton;
+    @FXML
+    private Label filenameLabel;
+    private Project selectedProject;
 
     @FXML
     public void initialize() {
         fillAllProjects();
         fillPerspectiveChoices();
+    }
+
+    public void openFileDialog() {
+        FileChooser fileChooser = new FileChooser();
+        File file = fileChooser.showSaveDialog(mainHBox.getScene().getWindow());
+        if (file != null) {
+            String fileAsString = file.toString();
+            filenameLabel.setText(fileAsString);
+            System.out.println();
+        }
+    }
+
+    public void exportFile() {
+        PerspectiveExportConfigurationParameters params = getExportParams();
+        perspectiveExportService.exportPerspective(params);
+    }
+
+    private PerspectiveExportConfigurationParameters getExportParams() {
+        return DefaultPerspectiveExportConfigurationParameters
+                .builder()
+                .projectId(selectedProject != null? selectedProject.getId() : null)
+                .columns(getColumns())
+                .perspectiveClass(perspectivesChoiceBox.getValue().getPerspectiveClass())
+                .perspectiveType(perspectivesChoiceBox.getValue().getPerspectiveType())
+                .filename(filenameLabel.getText())
+                .escape(getCharFromField(escape))
+                .quote(getCharFromField(quote))
+                .separator(getCharFromField(separator))
+                .lineEnd(lineEnd.getText())
+                .build();
+    }
+
+    private char getCharFromField(TextField field) {
+        String text = field.getText();
+        return text != null && text.length() > 0? text.charAt(0) : '\0';
+    }
+
+    private String[] getColumns() {
+        String[] columns = new String[perspectiveAttributesList.getItems().size()];
+        for (int i = 0; i < columns.length; i++) {
+            columns[i] = perspectiveAttributesList.getItems().get(i);
+        }
+        return columns;
     }
 
     private void fillPerspectiveAttributes(PerspectiveChoice choice) {
@@ -83,6 +139,9 @@ public class ProjectsTabController {
 
     private void fillAllProjects() {
         List<Project> projects = projectRepository.findAll();
+        projects.addAll(projects);
+        projects.addAll(projects);
+        projects.addAll(projects);
         projectList.setItems(FXCollections.observableList(projects));
         projectList.setCellFactory(param -> new ListCell<Project>() {
             @Override
@@ -91,6 +150,10 @@ public class ProjectsTabController {
                 if (item != null)
                     setText(item.getName());
             }
+        });
+        projectList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        projectList.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+            selectedProject = projectList.getItems().get(newValue.intValue());
         });
     }
 }
