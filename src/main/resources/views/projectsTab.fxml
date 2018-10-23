@@ -12,16 +12,14 @@
 <?import javafx.scene.control.Button?>
 <HBox styleClass="hBox" fx:id="mainHBox" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mcrminer.ui.controller.ProjectsTabController">
     <children>
-        <ScrollPane fx:id="projectScrollPane" fitToHeight="true">
-            <content>
-                <VBox fx:id="projectVBox">
-                    <children>
-                        <ListView fx:id="projectList" prefHeight="769.0" prefWidth="248.0">
-                        </ListView>
-                    </children>
-                </VBox>
-            </content>
-        </ScrollPane>
+        <VBox fx:id="projectVBox">
+            <children>
+                <ListView fx:id="projectList" prefHeight="769.0" prefWidth="248.0">
+                </ListView>
+
+                <Button fx:id="deleteProjectButton" text="%tab.projects.button.delete" styleClass="deleteProject" disable="true"/>
+            </children>
+        </VBox>
 
         <VBox styleClass="vBox">
             <children>
@@ -35,7 +33,7 @@
                             <children>
                                 <Label text="%tab.projects.export.form.filename.label" GridPane.columnIndex="0" GridPane.rowIndex="0" />
                                 <Button GridPane.columnIndex="1" GridPane.rowIndex="0" fx:id="filenameButton" text="Choose file" onAction="#openFileDialog"/>
-                                <Label fx:id="filenameLabel" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                                <Label fx:id="filenameLabel" GridPane.columnIndex="0" GridPane.rowIndex="6" GridPane.columnSpan="2"/>
 
                                 <Label text="%tab.projects.export.form.separator.label" GridPane.columnIndex="0" GridPane.rowIndex="1" />
                                 <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" fx:id="separator" maxWidth="25" text=","/>
@@ -49,7 +47,7 @@
                                 <Label text="%tab.projects.export.form.escape.label" GridPane.columnIndex="0" GridPane.rowIndex="4" />
                                 <TextField GridPane.columnIndex="1" GridPane.rowIndex="4" fx:id="escape" maxWidth="25"/>
 
-                                <Button fx:id="exportButton" text="%tab.projects.button.export" GridPane.columnIndex="1" GridPane.rowIndex="5" onAction="#exportFile"/>
+                                <Button fx:id="exportButton" text="%tab.projects.button.export" GridPane.columnIndex="1" GridPane.rowIndex="5" onAction="#exportFile" disable="true"/>
                             </children>
                         </GridPane>
                     </children>

@@ -11,10 +11,9 @@ import com.mcrminer.export.perspectives.reviewable.ReviewablePerspective;
 import com.mcrminer.export.perspectives.reviewer.ReviewerPerspective;
 import com.mcrminer.model.Project;
 import com.mcrminer.repository.ProjectRepository;
+import com.mcrminer.ui.Selectable;
 import com.mcrminer.ui.localization.LocalizationService;
 import com.mcrminer.ui.perspectives.PerspectiveChoice;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -53,7 +52,7 @@ public class ProjectsTabController {
     @FXML
     private ComboBox<PerspectiveChoice> perspectivesChoiceBox;
     @FXML
-    private ListView<String> perspectiveAttributesList;
+    private ListView<Selectable<String>> perspectiveAttributesList;
     @FXML
     private TextField quote, escape, lineEnd, separator;
     @FXML
@@ -74,8 +73,13 @@ public class ProjectsTabController {
         if (file != null) {
             String fileAsString = file.toString();
             filenameLabel.setText(fileAsString);
-            System.out.println();
+            setExportButtonAvailability();
         }
+    }
+
+    public void setExportButtonAvailability() {
+        boolean buttonAvailability = !(selectedProject != null && filenameLabel.getText() != null && !filenameLabel.getText().isEmpty() && perspectivesChoiceBox.getSelectionModel().getSelectedItem() != null);
+        exportButton.setDisable(buttonAvailability);
     }
 
     public void exportFile() {
@@ -104,22 +108,23 @@ public class ProjectsTabController {
     }
 
     private String[] getColumns() {
-        String[] columns = new String[perspectiveAttributesList.getItems().size()];
+        List<String> selectedColumns = perspectiveAttributesList.getItems().stream().filter(Selectable::isSelected).map(Selectable::getValue).collect(Collectors.toList());
+        String[] columns = new String[selectedColumns.size()];
         for (int i = 0; i < columns.length; i++) {
-            columns[i] = perspectiveAttributesList.getItems().get(i);
+            columns[i] = selectedColumns.get(i);
         }
         return columns;
     }
 
     private void fillPerspectiveAttributes(PerspectiveChoice choice) {
-        List<String> columnNames = Arrays.stream(choice.getPerspectiveClass().getDeclaredFields()).map(Field::getName).collect(Collectors.toList());
+        List<Selectable<String>> columnNames = Arrays
+                .stream(choice.getPerspectiveClass().getDeclaredFields())
+                .map(Field::getName)
+                .map(Selectable::new)
+                .collect(Collectors.toList());
         perspectiveAttributesList.setItems(FXCollections.observableList(columnNames));
 
-        perspectiveAttributesList.setCellFactory(CheckBoxListCell.forListView(param -> {
-            BooleanProperty observable = new SimpleBooleanProperty();
-            observable.setValue(true);
-            return observable;
-        }));
+        perspectiveAttributesList.setCellFactory(CheckBoxListCell.forListView(Selectable::getSelected));
     }
 
     private void fillPerspectiveChoices() {
@@ -133,15 +138,15 @@ public class ProjectsTabController {
         choices.forEach(choice -> choice.setTitle(localizationService.getMessage(choice.getTitle())));
         perspectivesChoiceBox.setItems(FXCollections.observableList(choices));
         perspectivesChoiceBox.getSelectionModel().selectedIndexProperty().addListener(
-                (observable, oldValue, newValue) -> fillPerspectiveAttributes(perspectivesChoiceBox.getItems().get(newValue.intValue()))
+                (observable, oldValue, newValue) -> {
+                    fillPerspectiveAttributes(perspectivesChoiceBox.getItems().get(newValue.intValue()));
+                    setExportButtonAvailability();
+                }
         );
     }
 
     private void fillAllProjects() {
         List<Project> projects = projectRepository.findAll();
-        projects.addAll(projects);
-        projects.addAll(projects);
-        projects.addAll(projects);
         projectList.setItems(FXCollections.observableList(projects));
         projectList.setCellFactory(param -> new ListCell<Project>() {
             @Override
@@ -154,6 +159,7 @@ public class ProjectsTabController {
         projectList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         projectList.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
             selectedProject = projectList.getItems().get(newValue.intValue());
+            setExportButtonAvailability();
         });
     }
 }

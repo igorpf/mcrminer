@@ -22,3 +22,8 @@
 .gridPane {
     -fx-padding: 10px;
 }
+
+.deleteProject {
+    -fx-background-color: #aa0c00;
+    -fx-text-fill: white;
+}
