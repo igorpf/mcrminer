@@ -14,7 +14,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-@AllArgsConstructor(onConstructor = @__(@Autowired))
 @NoArgsConstructor
 @SuppressWarnings("unchecked")
 public abstract class AbstractPerspectiveExportService implements PerspectiveExportService {
@@ -32,6 +31,11 @@ public abstract class AbstractPerspectiveExportService implements PerspectiveExp
         OutputStream outputStream = getOutputStream(parameters);
         PrintWriter printWriter = new PrintWriter(outputStream);
         fileWriterService.exportAsCsv(printWriter, perspectives, parameters);
+    }
+
+    @Autowired
+    public void setFileWriterService(FileWriterService fileWriterService) {
+        this.fileWriterService = fileWriterService;
     }
 
     protected abstract PerspectiveService<? ,?> getPerspectiveServiceFor(PerspectiveType perspectiveType);

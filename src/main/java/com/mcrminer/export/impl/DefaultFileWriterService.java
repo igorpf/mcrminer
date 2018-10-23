@@ -11,11 +11,14 @@ import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import java.io.PrintWriter;
 import java.util.List;
 
+
 @SuppressWarnings("unchecked")
+@Service
 public class DefaultFileWriterService implements FileWriterService {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultFileWriterService.class);
 
