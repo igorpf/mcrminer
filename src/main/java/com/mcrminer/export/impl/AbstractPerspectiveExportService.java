@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @SuppressWarnings("unchecked")
 public abstract class AbstractPerspectiveExportService implements PerspectiveExportService {
 
