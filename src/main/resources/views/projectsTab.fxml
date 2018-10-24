@@ -17,7 +17,7 @@
                 <ListView fx:id="projectList" prefHeight="769.0" prefWidth="248.0">
                 </ListView>
 
-                <Button fx:id="deleteProjectButton" text="%tab.projects.button.delete" styleClass="deleteProject" disable="true"/>
+                <Button fx:id="deleteProjectButton" text="%tab.projects.button.delete" styleClass="deleteProject" onAction="#deleteProject" disable="true"/>
             </children>
         </VBox>
 

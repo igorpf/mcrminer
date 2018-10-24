@@ -11,6 +11,7 @@ import com.mcrminer.export.perspectives.reviewable.ReviewablePerspective;
 import com.mcrminer.export.perspectives.reviewer.ReviewerPerspective;
 import com.mcrminer.model.Project;
 import com.mcrminer.repository.ProjectRepository;
+import com.mcrminer.service.CodeReviewMiningService;
 import com.mcrminer.ui.Selectable;
 import com.mcrminer.ui.localization.LocalizationService;
 import com.mcrminer.ui.perspectives.PerspectiveChoice;
@@ -21,6 +22,7 @@ import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -35,14 +37,17 @@ public class ProjectsTabController {
     private final ProjectRepository projectRepository;
     private final LocalizationService localizationService;
     private final PerspectiveExportService perspectiveExportService;
+    private final CodeReviewMiningService codeReviewMiningService;
 
     @Autowired
     public ProjectsTabController(ProjectRepository projectRepository,
                                  LocalizationService localizationService,
-                                 PerspectiveExportService perspectiveExportService) {
+                                 PerspectiveExportService perspectiveExportService,
+                                 @Qualifier("gerritCodeReviewMiningService") CodeReviewMiningService codeReviewMiningService) {
         this.projectRepository = projectRepository;
         this.localizationService = localizationService;
         this.perspectiveExportService = perspectiveExportService;
+        this.codeReviewMiningService = codeReviewMiningService;
     }
 
     @FXML
@@ -56,7 +61,7 @@ public class ProjectsTabController {
     @FXML
     private TextField quote, escape, lineEnd, separator;
     @FXML
-    private Button exportButton, filenameButton;
+    private Button exportButton, filenameButton, deleteProjectButton;
     @FXML
     private Label filenameLabel;
     private Project selectedProject;
@@ -77,7 +82,7 @@ public class ProjectsTabController {
         }
     }
 
-    public void setExportButtonAvailability() {
+    private void setExportButtonAvailability() {
         boolean buttonAvailability = !(selectedProject != null && filenameLabel.getText() != null && !filenameLabel.getText().isEmpty() && perspectivesChoiceBox.getSelectionModel().getSelectedItem() != null);
         exportButton.setDisable(buttonAvailability);
     }
@@ -85,6 +90,11 @@ public class ProjectsTabController {
     public void exportFile() {
         PerspectiveExportConfigurationParameters params = getExportParams();
         perspectiveExportService.exportPerspective(params);
+    }
+
+    public void deleteProject() {
+        if (selectedProject != null)
+            codeReviewMiningService.deleteProject(selectedProject.getId());
     }
 
     private PerspectiveExportConfigurationParameters getExportParams() {
@@ -160,6 +170,7 @@ public class ProjectsTabController {
         projectList.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
             selectedProject = projectList.getItems().get(newValue.intValue());
             setExportButtonAvailability();
+            deleteProjectButton.setDisable(selectedProject == null);
         });
     }
 }
