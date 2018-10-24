@@ -43,7 +43,7 @@ public class ImportTabController {
         task.setOnRunning((runningEvent) -> {
             LOG.info("Fetching project");
             searchButton.setDisable(true);
-            totalTime.setText(getLocalizationService().getMessage("label.fetching"));
+            totalTime.setText(getLocalizationService().getMessage("tab.import.label.fetch.running"));
         });
 
         task.setOnSucceeded((succeedEvent) -> {
@@ -55,6 +55,7 @@ public class ImportTabController {
         task.setOnFailed((failedEvent) -> {
             LOG.error("Error fetching project", failedEvent.getSource().getException());
             searchButton.setDisable(false);
+            totalTime.setText(getLocalizationService().getMessage("tab.import.label.fetch.error", failedEvent.getSource().getException().getMessage()));
         });
         ExecutorService executorService
                 = Executors.newFixedThreadPool(1);
@@ -63,7 +64,7 @@ public class ImportTabController {
     }
 
     private String getTotalSecondsMessage(long totalSeconds) {
-        return getLocalizationService().getMessage("time.total", totalSeconds);
+        return getLocalizationService().getMessage("tab.import.time.total", totalSeconds);
     }
 
     public LocalizationService getLocalizationService() {
