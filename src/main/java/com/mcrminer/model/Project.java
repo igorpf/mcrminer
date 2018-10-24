@@ -10,6 +10,9 @@ import java.util.Set;
             @NamedAttributeNode("reviewRequests")
     })
 })
+@Table(
+    uniqueConstraints= {@UniqueConstraint(columnNames = {"name", "urlPath"})}
+)
 public final class Project {
 
     @Id
@@ -19,7 +22,7 @@ public final class Project {
     private String urlPath;
     private String name;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true, mappedBy = "project")
     private Set<ReviewRequest> reviewRequests;
 
     public Project() {

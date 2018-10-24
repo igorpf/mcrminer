@@ -11,7 +11,7 @@ public final class ReviewRequest extends Reviewable {
 
     @ManyToOne
     private User submitter;
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true, mappedBy = "reviewRequest")
     private Set<Diff> diffs;
     @ManyToOne
     private Project project;
