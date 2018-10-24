@@ -61,7 +61,7 @@ public class ProjectsTabController {
     @FXML
     private TextField quote, escape, lineEnd, separator;
     @FXML
-    private Button exportButton, filenameButton, deleteProjectButton;
+    private Button exportButton, deleteProjectButton;
     @FXML
     private Label filenameLabel;
     private Project selectedProject;
@@ -93,8 +93,10 @@ public class ProjectsTabController {
     }
 
     public void deleteProject() {
-        if (selectedProject != null)
+        if (selectedProject != null) {
             codeReviewMiningService.deleteProject(selectedProject.getId());
+            fillAllProjects();
+        }
     }
 
     private PerspectiveExportConfigurationParameters getExportParams() {
@@ -155,7 +157,7 @@ public class ProjectsTabController {
         );
     }
 
-    private void fillAllProjects() {
+    public void fillAllProjects() {
         List<Project> projects = projectRepository.findAll();
         projectList.setItems(FXCollections.observableList(projects));
         projectList.setCellFactory(param -> new ListCell<Project>() {
@@ -168,7 +170,8 @@ public class ProjectsTabController {
         });
         projectList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         projectList.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
-            selectedProject = projectList.getItems().get(newValue.intValue());
+            int index = newValue.intValue();
+            selectedProject = index != -1? projectList.getItems().get(newValue.intValue()) : null;
             setExportButtonAvailability();
             deleteProjectButton.setDisable(selectedProject == null);
         });
