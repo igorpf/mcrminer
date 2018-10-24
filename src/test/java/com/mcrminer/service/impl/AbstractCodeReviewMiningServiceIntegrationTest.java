@@ -1,8 +1,8 @@
 package com.mcrminer.service.impl;
 
 import com.mcrminer.DatabaseTest;
+import com.mcrminer.exceptions.ProjectAlreadyImportedException;
 import com.mcrminer.model.Project;
-import com.mcrminer.model.projections.ProjectProjection;
 import com.mcrminer.repository.ProjectRepository;
 import com.mcrminer.service.AuthenticationData;
 import com.mcrminer.service.CodeReviewMiningService;
@@ -48,8 +48,15 @@ public class AbstractCodeReviewMiningServiceIntegrationTest {
     public void setUp() throws Exception {
     }
 
-    @Test
-    public void test() {
+    @Test(expected = ProjectAlreadyImportedException.class)
+    public void testThatTheSameProjectIsNotImportedTwice() {
         Project fetchedProject = codeReviewMiningService.fetchProject("someProject", authData);
+        codeReviewMiningService.fetchProject("someProject", authData);
+    }
+
+    public void testDeleteProject() {
+        Project fetchedProject = codeReviewMiningService.fetchProject("someProject", authData);
+        codeReviewMiningService.deleteProject(fetchedProject.getId());
+        assertThat(projectRepository.findAll(), hasSize(0));
     }
 }

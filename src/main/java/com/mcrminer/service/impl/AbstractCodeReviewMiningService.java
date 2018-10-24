@@ -1,10 +1,12 @@
 package com.mcrminer.service.impl;
 
+import com.mcrminer.exceptions.ProjectAlreadyImportedException;
 import com.mcrminer.model.*;
 import com.mcrminer.repository.*;
 import com.mcrminer.service.AuthenticationData;
 import com.mcrminer.service.CodeReviewMiningService;
 import lombok.AllArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -25,6 +27,8 @@ public abstract class AbstractCodeReviewMiningService implements CodeReviewMinin
     @Override
     public Project fetchProject(String projectId, AuthenticationData authData) {
         Project project = getProject(projectId, authData);
+        if (projectRepository.existsByNameAndUrlPath(project.getName(), project.getUrlPath()))
+            throw new ProjectAlreadyImportedException("This project already exists");
         project = projectRepository.save(project);
         List<ReviewRequest> reviewRequests = getReviewRequestsForProject(project, authData);
         for (ReviewRequest reviewRequest : reviewRequests) {
@@ -33,6 +37,16 @@ public abstract class AbstractCodeReviewMiningService implements CodeReviewMinin
         }
         project.setReviewRequests(new HashSet<>(reviewRequests));
         return projectRepository.save(project);
+    }
+
+    @Override
+    @Transactional
+    public void deleteProject(Long projectId) {
+        commentRepository.deleteAllByFileDiffReviewRequestProjectId(projectId);
+        fileRepository.deleteAllByDiffReviewRequestProjectId(projectId);
+        diffRepository.deleteAllByReviewRequestProjectId(projectId);
+        reviewRequestRepository.findAllByProjectId(projectId);
+        projectRepository.delete(projectRepository.getOne(projectId));
     }
 
     private void saveReviewRequest(ReviewRequest reviewRequest, AuthenticationData authData) {

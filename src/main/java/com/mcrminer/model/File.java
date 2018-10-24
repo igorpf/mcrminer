@@ -20,7 +20,7 @@ public final class File {
     private Long id;
     @ManyToOne
     private Diff diff;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true, mappedBy = "file")
     private Collection<Comment> comments;
 
     private String newFilename;

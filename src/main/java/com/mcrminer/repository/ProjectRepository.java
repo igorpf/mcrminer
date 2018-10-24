@@ -9,4 +9,6 @@ public interface ProjectRepository extends JpaRepository <Project, Long> {
 
     @EntityGraph(value = "withReviewRequests", type = EntityGraph.EntityGraphType.FETCH)
     ProjectProjection getById(Long id);
+
+    boolean existsByNameAndUrlPath(String name, String urlPath);
 }

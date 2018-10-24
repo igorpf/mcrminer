@@ -10,7 +10,7 @@ public final class Diff extends Reviewable {
     @ManyToOne
     private ReviewRequest reviewRequest;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true, mappedBy = "diff")
     private Collection<File> files;
 
     public ReviewRequest getReviewRequest() {
