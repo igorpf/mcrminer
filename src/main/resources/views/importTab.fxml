@@ -10,10 +10,12 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.control.ComboBox?>
 <VBox alignment="CENTER" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mcrminer.ui.controller.ImportTabController">
     <children>
         <GridPane alignment="CENTER" hgap="10.0" prefHeight="108.0" prefWidth="600.0" vgap="10.0">
             <rowConstraints>
+                <RowConstraints vgrow="ALWAYS" minHeight="30" />
                 <RowConstraints vgrow="ALWAYS" minHeight="30" />
                 <RowConstraints vgrow="ALWAYS" minHeight="30" />
                 <RowConstraints vgrow="ALWAYS" minHeight="30" />
@@ -31,6 +33,13 @@
 
                 <Label text="%tab.import.form.user.password" GridPane.columnIndex="0" GridPane.rowIndex="3" />
                 <PasswordField fx:id="password" text="1/d12aeNJkVXVuExf6W-vNhaOaCpEGIV5MKXzEiAY0NDs" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                <Label text="%tab.import.form.miningtool" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                <ComboBox fx:id="miningServiceChoice" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                    <VBox.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                    </VBox.margin>
+                </ComboBox>
             </children>
          <VBox.margin>
             <Insets bottom="10.0" />

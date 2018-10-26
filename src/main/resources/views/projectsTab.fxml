@@ -34,9 +34,10 @@
         <VBox styleClass="vBox">
             <children>
                 <ComboBox fx:id="perspectivesChoiceBox">
-               <VBox.margin>
-                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-               </VBox.margin></ComboBox>
+                   <VBox.margin>
+                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                   </VBox.margin>
+                </ComboBox>
                 <HBox styleClass="perspectiveHBox">
                    <children>
                         <ListView fx:id="perspectiveAttributesList" prefHeight="719.0" prefWidth="248.0">

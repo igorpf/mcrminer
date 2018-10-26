@@ -5,8 +5,10 @@ import com.mcrminer.service.CodeReviewMiningService;
 import com.mcrminer.service.DefaultAuthenticationData;
 import com.mcrminer.ui.localization.LocalizationService;
 import com.mcrminer.ui.tasks.FetchProjectTask;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import org.slf4j.Logger;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Collections;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -25,7 +28,7 @@ public class ImportTabController {
     private static final Logger LOG = LoggerFactory.getLogger(ImportTabController.class);
 
     private LocalizationService localizationService;
-    private CodeReviewMiningService codeReviewMiningService;
+    private CodeReviewMiningService gerritCodeReviewMiningService;
 
     @FXML
     private TextField projectUrl, projectName, username, password;
@@ -33,6 +36,17 @@ public class ImportTabController {
     private Label totalTime;
     @FXML
     private Button searchButton;
+    @FXML
+    private ComboBox<MiningServiceChoice> miningServiceChoice;
+
+    @FXML
+    public void initialize() {
+        MiningServiceChoice gerritChoice = new MiningServiceChoice(gerritCodeReviewMiningService, "Gerrit");
+        miningServiceChoice.setItems(FXCollections.observableList(
+                Collections.singletonList(gerritChoice)
+        ));
+        miningServiceChoice.getSelectionModel().select(gerritChoice);
+    }
 
     public void fetchProject() {
         AuthenticationData auth = new DefaultAuthenticationData(username.getText(), password.getText(), projectUrl.getText());
@@ -77,11 +91,34 @@ public class ImportTabController {
     }
 
     public CodeReviewMiningService getCodeReviewMiningService() {
-        return codeReviewMiningService;
+        return miningServiceChoice.getSelectionModel().getSelectedItem().getCodeReviewMiningService();
     }
 
     @Resource(name = "gerritCodeReviewMiningService")
-    public void setCodeReviewMiningService(CodeReviewMiningService codeReviewMiningService) {
+    public void setGerritCodeReviewMiningService(CodeReviewMiningService gerritCodeReviewMiningService) {
+        this.gerritCodeReviewMiningService = gerritCodeReviewMiningService;
+    }
+}
+
+class MiningServiceChoice {
+    private CodeReviewMiningService codeReviewMiningService;
+    private String name;
+
+    MiningServiceChoice(CodeReviewMiningService codeReviewMiningService, String name) {
         this.codeReviewMiningService = codeReviewMiningService;
+        this.name = name;
+    }
+
+    public CodeReviewMiningService getCodeReviewMiningService() {
+        return codeReviewMiningService;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }
