@@ -1,19 +1,22 @@
 package com.mcrminer.model;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.Collection;
 import java.util.HashSet;
 
 @Entity
+@NamedEntityGraphs({
+        @NamedEntityGraph(name = "diffWithReviews", attributeNodes = {
+                @NamedAttributeNode("reviews")
+        })
+})
 public final class Diff extends Reviewable {
 
     @ManyToOne
     private ReviewRequest reviewRequest;
 
-    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true, mappedBy = "diff")
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @JoinColumn(name = "DIFF_ID")
     private Collection<File> files;
 
     public Diff() {

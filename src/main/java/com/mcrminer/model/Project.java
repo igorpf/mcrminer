@@ -23,7 +23,8 @@ public final class Project {
     private String urlPath;
     private String name;
 
-    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true, mappedBy = "project")
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @JoinColumn(name = "PROJECT_ID")
     private Set<ReviewRequest> reviewRequests;
 
     public Project() {

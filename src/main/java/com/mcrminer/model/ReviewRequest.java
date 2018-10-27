@@ -2,19 +2,22 @@ package com.mcrminer.model;
 
 import com.mcrminer.model.enums.ReviewRequestStatus;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@NamedEntityGraphs({
+        @NamedEntityGraph(name = "reviewRequestWithReviews", attributeNodes = {
+                @NamedAttributeNode("reviews")
+        })
+})
 public final class ReviewRequest extends Reviewable {
 
     @ManyToOne
     private User submitter;
-    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true, mappedBy = "reviewRequest")
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @JoinColumn(name = "REVIEW_REQUEST_ID")
     private Set<Diff> diffs;
     @ManyToOne
     private Project project;
