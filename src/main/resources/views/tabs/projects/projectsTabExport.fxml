@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox styleClass="vBox"
+      fx:controller="com.mcrminer.ui.controller.ProjectsTabExportController"
+      xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml">
+    <children>
+        <ComboBox fx:id="perspectivesChoiceBox">
+            <VBox.margin>
+                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+            </VBox.margin>
+        </ComboBox>
+        <HBox styleClass="perspectiveHBox">
+            <children>
+                <ListView fx:id="perspectiveAttributesList" prefHeight="719.0" prefWidth="200.0" minWidth="200">
+                </ListView>
+
+                <GridPane styleClass="gridPane">
+                    <children>
+                        <Label text="%tab.projects.export.form.filename.label" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                        <Button fx:id="filenameButton" onAction="#openFileDialog" text="Choose file" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                        <Label text="%tab.projects.export.form.separator.label" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                        <TextField fx:id="separator" maxWidth="25" text="," GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                        <Label text="%tab.projects.export.form.quote.label" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                        <TextField fx:id="quote" maxWidth="25" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                        <Label text="%tab.projects.export.form.lineend.label" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                        <TextField fx:id="lineEnd" maxWidth="40" text="\\n" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                        <Label text="%tab.projects.export.form.escape.label" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                        <TextField fx:id="escape" maxWidth="25" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+                        <Button fx:id="exportButton" disable="true" onAction="#exportFile" text="%tab.projects.button.export" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+
+                        <Label fx:id="filenameLabel" wrapText="true" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="6"/>
+                    </children>
+                    <columnConstraints>
+                        <ColumnConstraints />
+                        <ColumnConstraints />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                    </rowConstraints>
+                </GridPane>
+            </children>
+            <VBox.margin>
+                <Insets left="8.0" />
+            </VBox.margin>
+        </HBox>
+    </children>
+</VBox>

@@ -4,17 +4,16 @@
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.VBox?>
-
 <VBox prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mcrminer.ui.controller.MainWindowController">
    <children>
        <MenuBar />
        <TabPane styleClass="tabPane" tabClosingPolicy="UNAVAILABLE">
           <tabs>
               <Tab fx:id="importTab" text="%tab.import.title">
-                  <fx:include source="importTab.fxml" />
+                  <fx:include source="tabs/import/importTab.fxml" />
               </Tab>
               <Tab fx:id="projectsTab" text="%tab.projects.title">
-                <fx:include source="projectsTab.fxml" />
+                <fx:include source="tabs/projects/projectsTab.fxml" />
               </Tab>
           </tabs>
        </TabPane>

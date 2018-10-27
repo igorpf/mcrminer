@@ -1,160 +1,51 @@
 package com.mcrminer.ui.controller;
 
-import com.mcrminer.export.DefaultPerspectiveExportConfigurationParameters;
-import com.mcrminer.export.PerspectiveExportConfigurationParameters;
-import com.mcrminer.export.perspectives.PerspectiveExportService;
-import com.mcrminer.export.perspectives.author.AuthorPerspective;
-import com.mcrminer.export.perspectives.comment.CommentPerspective;
-import com.mcrminer.export.perspectives.enums.PerspectiveType;
-import com.mcrminer.export.perspectives.file.FilePerspective;
-import com.mcrminer.export.perspectives.reviewable.ReviewablePerspective;
-import com.mcrminer.export.perspectives.reviewer.ReviewerPerspective;
 import com.mcrminer.model.Project;
 import com.mcrminer.repository.ProjectRepository;
-import com.mcrminer.service.CodeReviewMiningService;
-import com.mcrminer.ui.Selectable;
-import com.mcrminer.ui.localization.LocalizationService;
-import com.mcrminer.ui.perspectives.PerspectiveChoice;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.CheckBoxListCell;
+import javafx.scene.control.Button;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.layout.HBox;
-import javafx.stage.FileChooser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class ProjectsTabController {
 
     private final ProjectRepository projectRepository;
-    private final LocalizationService localizationService;
-    private final PerspectiveExportService perspectiveExportService;
-    private final CodeReviewMiningService codeReviewMiningService;
 
     @Autowired
-    public ProjectsTabController(ProjectRepository projectRepository,
-                                 LocalizationService localizationService,
-                                 PerspectiveExportService perspectiveExportService,
-                                 @Qualifier("gerritCodeReviewMiningService") CodeReviewMiningService codeReviewMiningService) {
+    public ProjectsTabController(ProjectRepository projectRepository) {
         this.projectRepository = projectRepository;
-        this.localizationService = localizationService;
-        this.perspectiveExportService = perspectiveExportService;
-        this.codeReviewMiningService = codeReviewMiningService;
     }
 
     @FXML
-    private HBox mainHBox;
-    @FXML
     private ListView<Project> projectList;
     @FXML
-    private ComboBox<PerspectiveChoice> perspectivesChoiceBox;
+    private Button deleteProjectButton;
     @FXML
-    private ListView<Selectable<String>> perspectiveAttributesList;
+    private ProjectsTabExportController projectsTabExportController;
     @FXML
-    private TextField quote, escape, lineEnd, separator;
-    @FXML
-    private Button exportButton, deleteProjectButton;
-    @FXML
-    private Label filenameLabel;
+    private HBox mainHBox;
+
     private Project selectedProject;
 
     @FXML
     public void initialize() {
         fillAllProjects();
-        fillPerspectiveChoices();
-    }
-
-    public void openFileDialog() {
-        FileChooser fileChooser = new FileChooser();
-        File file = fileChooser.showSaveDialog(mainHBox.getScene().getWindow());
-        if (file != null) {
-            String fileAsString = file.toString();
-            filenameLabel.setText(fileAsString);
-            setExportButtonAvailability();
-        }
-    }
-
-    private void setExportButtonAvailability() {
-        boolean buttonAvailability = !(selectedProject != null && filenameLabel.getText() != null && !filenameLabel.getText().isEmpty() && perspectivesChoiceBox.getSelectionModel().getSelectedItem() != null);
-        exportButton.setDisable(buttonAvailability);
-    }
-
-    public void exportFile() {
-        PerspectiveExportConfigurationParameters params = getExportParams();
-        perspectiveExportService.exportPerspective(params);
+        projectsTabExportController.setMainHBox(mainHBox);
     }
 
     public void deleteProject() {
         if (selectedProject != null) {
-            codeReviewMiningService.deleteProject(selectedProject.getId());
+            projectRepository.delete(selectedProject);
             fillAllProjects();
         }
-    }
-
-    private PerspectiveExportConfigurationParameters getExportParams() {
-        return DefaultPerspectiveExportConfigurationParameters
-                .builder()
-                .projectId(selectedProject != null? selectedProject.getId() : null)
-                .columns(getColumns())
-                .perspectiveClass(perspectivesChoiceBox.getValue().getPerspectiveClass())
-                .perspectiveType(perspectivesChoiceBox.getValue().getPerspectiveType())
-                .filename(filenameLabel.getText())
-                .escape(getCharFromField(escape))
-                .quote(getCharFromField(quote))
-                .separator(getCharFromField(separator))
-                .lineEnd(lineEnd.getText())
-                .build();
-    }
-
-    private char getCharFromField(TextField field) {
-        String text = field.getText();
-        return text != null && text.length() > 0? text.charAt(0) : '\0';
-    }
-
-    private String[] getColumns() {
-        List<String> selectedColumns = perspectiveAttributesList.getItems().stream().filter(Selectable::isSelected).map(Selectable::getValue).collect(Collectors.toList());
-        String[] columns = new String[selectedColumns.size()];
-        for (int i = 0; i < columns.length; i++) {
-            columns[i] = selectedColumns.get(i);
-        }
-        return columns;
-    }
-
-    private void fillPerspectiveAttributes(PerspectiveChoice choice) {
-        List<Selectable<String>> columnNames = Arrays
-                .stream(choice.getPerspectiveClass().getDeclaredFields())
-                .map(Field::getName)
-                .map(Selectable::new)
-                .collect(Collectors.toList());
-        perspectiveAttributesList.setItems(FXCollections.observableList(columnNames));
-
-        perspectiveAttributesList.setCellFactory(CheckBoxListCell.forListView(Selectable::getSelected));
-    }
-
-    private void fillPerspectiveChoices() {
-        List<PerspectiveChoice> choices = Arrays.asList(
-                PerspectiveChoice.builder().perspectiveClass(AuthorPerspective.class).perspectiveType(PerspectiveType.AUTHOR).title("tab.projects.export.select.author.title").build(),
-                PerspectiveChoice.builder().perspectiveClass(CommentPerspective.class).perspectiveType(PerspectiveType.COMMENT).title("tab.projects.export.select.comment.title").build(),
-                PerspectiveChoice.builder().perspectiveClass(FilePerspective.class).perspectiveType(PerspectiveType.FILE).title("tab.projects.export.select.file.title").build(),
-                PerspectiveChoice.builder().perspectiveClass(ReviewablePerspective.class).perspectiveType(PerspectiveType.REVIEWABLE).title("tab.projects.export.select.reviewable.title").build(),
-                PerspectiveChoice.builder().perspectiveClass(ReviewerPerspective.class).perspectiveType(PerspectiveType.REVIEWER).title("tab.projects.export.select.reviewer.title").build()
-        );
-        choices.forEach(choice -> choice.setTitle(localizationService.getMessage(choice.getTitle())));
-        perspectivesChoiceBox.setItems(FXCollections.observableList(choices));
-        perspectivesChoiceBox.getSelectionModel().selectedIndexProperty().addListener(
-                (observable, oldValue, newValue) -> {
-                    fillPerspectiveAttributes(perspectivesChoiceBox.getItems().get(newValue.intValue()));
-                    setExportButtonAvailability();
-                }
-        );
     }
 
     public void fillAllProjects() {
@@ -172,7 +63,8 @@ public class ProjectsTabController {
         projectList.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
             int index = newValue.intValue();
             selectedProject = index != -1? projectList.getItems().get(newValue.intValue()) : null;
-            setExportButtonAvailability();
+            projectsTabExportController.setSelectedProject(selectedProject);
+            projectsTabExportController.setExportButtonAvailability();
             deleteProjectButton.setDisable(selectedProject == null);
         });
     }
