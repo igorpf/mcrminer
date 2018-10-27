@@ -6,7 +6,6 @@ import com.mcrminer.repository.*;
 import com.mcrminer.service.AuthenticationData;
 import com.mcrminer.service.CodeReviewMiningService;
 import lombok.AllArgsConstructor;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -37,16 +36,6 @@ public abstract class AbstractCodeReviewMiningService implements CodeReviewMinin
         }
         project.setReviewRequests(new HashSet<>(reviewRequests));
         return projectRepository.save(project);
-    }
-
-    @Override
-    @Transactional
-    public void deleteProject(Long projectId) {
-        commentRepository.deleteAllByFileDiffReviewRequestProjectId(projectId);
-        fileRepository.deleteAllByDiffReviewRequestProjectId(projectId);
-        diffRepository.deleteAllByReviewRequestProjectId(projectId);
-        reviewRequestRepository.findAllByProjectId(projectId);
-        projectRepository.delete(projectRepository.getOne(projectId));
     }
 
     private void saveReviewRequest(ReviewRequest reviewRequest, AuthenticationData authData) {
