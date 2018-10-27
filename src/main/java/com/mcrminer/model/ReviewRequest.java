@@ -2,8 +2,11 @@ package com.mcrminer.model;
 
 import com.mcrminer.model.enums.ReviewRequestStatus;
 
-import javax.persistence.*;
-import java.util.Objects;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -20,6 +23,10 @@ public final class ReviewRequest extends Reviewable {
     private boolean isPublic;
     private ReviewRequestStatus status;
     private String description;
+
+    public ReviewRequest() {
+        this.diffs = new HashSet<>();
+    }
 
     public User getSubmitter() {
         return submitter;
