@@ -6,30 +6,32 @@ import com.mcrminer.model.enums.ReviewRequestStatus;
 import com.mcrminer.repository.factory.DomainObjectsFactory;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collections;
 
 public class TransientObjectsFactory implements DomainObjectsFactory {
+
+    private static long ID_GENERATOR = 0;
+
     @Override
     public Project createProject(String urlPath, String name) {
         Project project = new Project();
         project.setUrlPath(urlPath);
         project.setName(name);
         project.setCodeReviewToolId("gerrit");
-        project.setId(1L);
+        project.setId(getId());
         return project;
     }
 
     @Override
     public Review createReview(String description, Reviewable reviewed) {
         Review review = new Review();
-        review.setId(1L);
+        review.setId(getId());
         review.setReviewed(reviewed);
         review.setAuthor(createUser("review@example.com"));
         review.setDescription(description);
         review.setCreatedTime(LocalDateTime.now().minusWeeks(1));
         review.setUpdatedTime(LocalDateTime.now());
         review.setStatus(createApprovalStatus());
+        reviewed.getReviews().add(review);
         return review;
     }
 
@@ -37,9 +39,7 @@ public class TransientObjectsFactory implements DomainObjectsFactory {
     public ReviewRequest createReviewRequest(Project project) {
         ReviewRequest reviewRequest = new ReviewRequest();
         reviewRequest.setProject(project);
-        reviewRequest.setId(1L);
-        reviewRequest.setReviews(Collections.singleton(createReview("nice", reviewRequest)));
-        reviewRequest.setDiffs(Collections.singleton(createDiff(reviewRequest)));
+        reviewRequest.setId(getId());
         reviewRequest.setUpdatedTime(LocalDateTime.now());
         reviewRequest.setCreatedTime(LocalDateTime.now().minusMonths(2));
         reviewRequest.setDescription("new software version");
@@ -48,6 +48,7 @@ public class TransientObjectsFactory implements DomainObjectsFactory {
         reviewRequest.setPublic(true);
         reviewRequest.setStatus(ReviewRequestStatus.MERGED);
         reviewRequest.setBranch("master");
+        project.getReviewRequests().add(reviewRequest);
         return reviewRequest;
     }
 
@@ -57,7 +58,10 @@ public class TransientObjectsFactory implements DomainObjectsFactory {
         comment.setText(text);
         comment.setAuthor(createUser("user@example.com"));
         comment.setFile(file);
-        comment.setId(1L);
+        comment.setId(getId());
+        comment.setCreatedTime(LocalDateTime.now().minusWeeks(2));
+        comment.setUpdatedTime(LocalDateTime.now().minusHours(1));
+        file.getComments().add(comment);
         return comment;
     }
 
@@ -73,17 +77,11 @@ public class TransientObjectsFactory implements DomainObjectsFactory {
     @Override
     public Diff createDiff(ReviewRequest reviewRequest) {
         Diff diff = new Diff();
-        diff.setId(2L);
+        diff.setId(getId());
         diff.setReviewRequest(reviewRequest);
         diff.setCreatedTime(LocalDateTime.now().minusDays(2));
         diff.setUpdatedTime(LocalDateTime.now());
-        diff.setFiles(Arrays.asList(
-                createFile("somefile.txt", diff),
-                createFile("anotherfile.java", diff)
-        ));
-        diff.setReviews(Collections.singleton(
-                createReview("cool changes", diff)
-        ));
+        reviewRequest.getDiffs().add(diff);
         return diff;
     }
 
@@ -99,17 +97,18 @@ public class TransientObjectsFactory implements DomainObjectsFactory {
     @Override
     public File createFile(String filename, Diff diff) {
         File file = new File();
-        file.setId(2L);
+        file.setId(getId());
         file.setLinesInserted(1L);
         file.setLinesRemoved(2L);
         file.setStatus(FileStatus.MODIFIED);
         file.setNewFilename(filename);
-        file.setComments(Arrays.asList(
-                createComment("nice feature", file),
-                createComment("this is not ok", file)
-        ));
         file.setDiff(diff);
+        diff.getFiles().add(file);
         return file;
+    }
+
+    private long getId() {
+        return ID_GENERATOR++;
     }
 
     private ApprovalStatus createApprovalStatus() {

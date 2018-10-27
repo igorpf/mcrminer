@@ -1,16 +1,19 @@
 package com.mcrminer.model;
 
 import com.mcrminer.model.enums.FileStatus;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Objects;
 
 @Entity
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 public final class File {
@@ -22,6 +25,10 @@ public final class File {
     private Diff diff;
     @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true, mappedBy = "file")
     private Collection<Comment> comments;
+
+    public File() {
+        this.comments = new HashSet<>();
+    }
 
     private String newFilename;
     private String oldFilename; //if renamed
