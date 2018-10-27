@@ -33,8 +33,12 @@ public class ProjectFileStatisticsCalculationStrategy implements StatisticsCalcu
         statistics.setChangedFiles(allFiles.size());
         statistics.setComments(allFiles.stream().map(File::getComments).mapToLong(Collection::size).sum());
         statistics.setAverageCommentSize(allFiles.stream().map(File::getComments).flatMap(Collection::stream).mapToLong(c -> c.getText().length()).average().orElse(0.0));
-        statistics.setChangedLinesOfCode(allFiles.stream().mapToLong(file -> file.getLinesRemoved() + file.getLinesInserted()).sum());
+        statistics.setChangedLinesOfCode(allFiles.stream().mapToLong(file -> getValueOrZeroIfNull(file.getLinesRemoved()) + getValueOrZeroIfNull(file.getLinesInserted())).sum());
         statistics.setCommentedFilesPercentage(commentedFiles.size() / (double) allFiles.size());
+    }
+
+    private long getValueOrZeroIfNull(Long number) {
+        return number != null? number: 0L;
     }
 
 }

@@ -42,10 +42,21 @@ public class ProjectStatisticsCalculationStrategy implements StatisticsCalculati
             LocalDateTime reviewCreation = reviewRequest.getCreatedTime();
             List<Comment> reviewComments = commentRepository.findAllByFileDiffReviewRequestProjectId(project.getId());
             commentsElapsedTimes.addAll(
-                    reviewComments.stream().map(comment -> Duration.between(reviewCreation,comment.getCreatedTime()).toMinutes()).collect(Collectors.toList())
+                    reviewComments.stream()
+                            .filter(comment -> getCreationOrUpdateTime(comment) != null)
+                            .map(comment -> Duration.between(reviewCreation,getCreationOrUpdateTime(comment)).toMinutes())
+                            .collect(Collectors.toList())
             );
         }
         statistics.setAverageReviewTimeInMinutes(commentsElapsedTimes.stream().mapToLong(Long::longValue).average().orElse(0));
+    }
+
+    private LocalDateTime getCreationOrUpdateTime(Comment comment) {
+        if (comment.getCreatedTime() != null)
+            return comment.getCreatedTime();
+        if (comment.getUpdatedTime() != null)
+            return comment.getUpdatedTime();
+        return null;
     }
 
 }
