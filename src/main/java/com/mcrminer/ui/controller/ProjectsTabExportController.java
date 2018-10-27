@@ -69,7 +69,7 @@ public class ProjectsTabExportController {
         }
     }
 
-    void setExportButtonAvailability() {
+    private void setExportButtonAvailability() {
         boolean buttonAvailability = !(selectedProject != null && filenameLabel.getText() != null && !filenameLabel.getText().isEmpty() && perspectivesChoiceBox.getSelectionModel().getSelectedItem() != null);
         exportButton.setDisable(buttonAvailability);
     }
@@ -143,5 +143,6 @@ public class ProjectsTabExportController {
 
     void setSelectedProject(Project selectedProject) {
         this.selectedProject = selectedProject;
+        setExportButtonAvailability();
     }
 }

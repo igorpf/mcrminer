@@ -31,6 +31,8 @@ public class ProjectsTabController {
     @FXML
     private ProjectsTabExportController projectsTabExportController;
     @FXML
+    private ProjectsTabStatisticsController projectsTabStatisticsController;
+    @FXML
     private HBox mainHBox;
 
     private Project selectedProject;
@@ -64,7 +66,7 @@ public class ProjectsTabController {
             int index = newValue.intValue();
             selectedProject = index != -1? projectList.getItems().get(newValue.intValue()) : null;
             projectsTabExportController.setSelectedProject(selectedProject);
-            projectsTabExportController.setExportButtonAvailability();
+            projectsTabStatisticsController.setSelectedProject(selectedProject);
             deleteProjectButton.setDisable(selectedProject == null);
         });
     }

@@ -25,6 +25,6 @@
         </VBox>
 
         <fx:include source="projectsTabExport.fxml" fx:id="projectsTabExport" />
-        <fx:include source="projectsTabStatistics.fxml" />
+        <fx:include source="projectsTabStatistics.fxml" fx:id="projectsTabStatistics"/>
     </children>
 </HBox>
