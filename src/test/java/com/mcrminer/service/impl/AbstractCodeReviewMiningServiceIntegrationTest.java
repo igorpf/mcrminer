@@ -3,7 +3,7 @@ package com.mcrminer.service.impl;
 import com.mcrminer.DatabaseTest;
 import com.mcrminer.exceptions.ProjectAlreadyImportedException;
 import com.mcrminer.model.Project;
-import com.mcrminer.repository.ProjectRepository;
+import com.mcrminer.repository.*;
 import com.mcrminer.service.AuthenticationData;
 import com.mcrminer.service.CodeReviewMiningService;
 import org.junit.Before;
@@ -27,6 +27,15 @@ public class AbstractCodeReviewMiningServiceIntegrationTest {
     private CodeReviewMiningService codeReviewMiningService;
     @Autowired
     private ProjectRepository projectRepository;
+    @Autowired
+    private ReviewRequestRepository reviewRequestRepository;
+    @Autowired
+    private DiffRepository diffRepository;
+    @Autowired
+    private FileRepository fileRepository;
+    @Autowired
+    private CommentRepository commentRepository;
+
     private final AuthenticationData authData = new AuthenticationData() {
         @Override
         public String getUsername() {
@@ -50,13 +59,18 @@ public class AbstractCodeReviewMiningServiceIntegrationTest {
 
     @Test(expected = ProjectAlreadyImportedException.class)
     public void testThatTheSameProjectIsNotImportedTwice() {
-        Project fetchedProject = codeReviewMiningService.fetchProject("someProject", authData);
+        codeReviewMiningService.fetchProject("someProject", authData);
         codeReviewMiningService.fetchProject("someProject", authData);
     }
 
+    @Test
     public void testDeleteProject() {
         Project fetchedProject = codeReviewMiningService.fetchProject("someProject", authData);
-        codeReviewMiningService.deleteProject(fetchedProject.getId());
+        projectRepository.delete(fetchedProject);
         assertThat(projectRepository.findAll(), hasSize(0));
+        assertThat(reviewRequestRepository.findAll(), hasSize(0));
+        assertThat(diffRepository.findAll(), hasSize(0));
+        assertThat(fileRepository.findAll(), hasSize(0));
+        assertThat(commentRepository.findAll(), hasSize(0));
     }
 }
