@@ -16,6 +16,11 @@ import java.util.Objects;
 @AllArgsConstructor
 @Getter
 @Setter
+@NamedEntityGraphs({
+        @NamedEntityGraph(name = "withComments", attributeNodes = {
+                @NamedAttributeNode("comments")
+        })
+})
 public final class File {
 
     @Id
@@ -23,7 +28,8 @@ public final class File {
     private Long id;
     @ManyToOne
     private Diff diff;
-    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true, mappedBy = "file")
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @JoinColumn(name = "FILE_ID")
     private Collection<Comment> comments;
 
     public File() {

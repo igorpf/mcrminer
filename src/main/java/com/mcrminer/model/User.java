@@ -1,9 +1,6 @@
 package com.mcrminer.model;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
 
@@ -16,6 +13,7 @@ public final class User {
     private String username;
 
     @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "SUBMITTER_EMAIL")
     private Set<ReviewRequest> reviewRequests;
 
     public String getEmail() {
