@@ -15,6 +15,15 @@
     -fx-padding: 16px;
 }
 
+.vBox {
+    -fx-border-color: rgba(124, 123, 129, 0.8);
+    -fx-border-width: 1;
+    -fx-border-style: solid;
+    -fx-border-insets: 5px;
+    -fx-background-insets: 5px;
+    -fx-min-width: 250px;
+}
+
 .perspectiveHBox {
     -fx-padding: 16px 0;
 }

@@ -1,20 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
-
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <HBox fx:id="mainHBox" prefHeight="768.0" prefWidth="1024.0" styleClass="hBox" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mcrminer.ui.controller.ProjectsTabController">
     <children>
-        <VBox fx:id="projectVBox">
+        <VBox fx:id="projectVBox" styleClass="vBox">
             <children>
                 <Button fx:id="refreshProjectsButton" onAction="#fillAllProjects" text="%tab.projects.button.refresh">
                <VBox.margin>
@@ -40,14 +31,13 @@
                 </ComboBox>
                 <HBox styleClass="perspectiveHBox">
                    <children>
-                        <ListView fx:id="perspectiveAttributesList" prefHeight="719.0" prefWidth="248.0">
+                        <ListView fx:id="perspectiveAttributesList" prefHeight="719.0" prefWidth="200.0" minWidth="200">
                         </ListView>
 
                         <GridPane styleClass="gridPane">
                             <children>
                                 <Label text="%tab.projects.export.form.filename.label" GridPane.columnIndex="0" GridPane.rowIndex="0" />
                                 <Button fx:id="filenameButton" onAction="#openFileDialog" text="Choose file" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-                                <Label fx:id="filenameLabel" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="6" />
 
                                 <Label text="%tab.projects.export.form.separator.label" GridPane.columnIndex="0" GridPane.rowIndex="1" />
                                 <TextField fx:id="separator" maxWidth="25" text="," GridPane.columnIndex="1" GridPane.rowIndex="1" />
@@ -62,20 +52,22 @@
                                 <TextField fx:id="escape" maxWidth="25" GridPane.columnIndex="1" GridPane.rowIndex="4" />
 
                                 <Button fx:id="exportButton" disable="true" onAction="#exportFile" text="%tab.projects.button.export" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+
+                                <Label fx:id="filenameLabel" wrapText="true" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="6"/>
                             </children>
-                     <columnConstraints>
-                        <ColumnConstraints />
-                        <ColumnConstraints />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints />
-                        <RowConstraints />
-                        <RowConstraints />
-                        <RowConstraints />
-                        <RowConstraints />
-                        <RowConstraints />
-                        <RowConstraints />
-                     </rowConstraints>
+                             <columnConstraints>
+                                <ColumnConstraints />
+                                <ColumnConstraints />
+                             </columnConstraints>
+                             <rowConstraints>
+                                <RowConstraints />
+                                <RowConstraints />
+                                <RowConstraints />
+                                <RowConstraints />
+                                <RowConstraints />
+                                <RowConstraints />
+                                <RowConstraints />
+                             </rowConstraints>
                         </GridPane>
                     </children>
                <VBox.margin>
@@ -85,7 +77,7 @@
             </children>
         </VBox>
 
-        <VBox fx:id="statisticsScrollPane" prefHeight="768.0" prefWidth="272.0">
+        <VBox fx:id="statisticsScrollPane" prefHeight="768.0" prefWidth="272.0" styleClass="vBox">
             <children>
                 <Label text="%tab.projects.statistics.title" />
             </children>
