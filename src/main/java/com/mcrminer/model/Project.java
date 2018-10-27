@@ -1,6 +1,7 @@
 package com.mcrminer.model;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -26,6 +27,7 @@ public final class Project {
     private Set<ReviewRequest> reviewRequests;
 
     public Project() {
+        this.reviewRequests = new HashSet<>();
     }
 
     public Long getId() {

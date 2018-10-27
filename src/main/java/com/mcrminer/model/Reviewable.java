@@ -2,6 +2,7 @@ package com.mcrminer.model;
 
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -13,7 +14,7 @@ public abstract class Reviewable extends BaseAuditingEntity {
     private Long id;
 
     @OneToMany
-    private Set<Review> reviews;
+    private Set<Review> reviews = new HashSet<>();
 
     public Long getId() {
         return id;
