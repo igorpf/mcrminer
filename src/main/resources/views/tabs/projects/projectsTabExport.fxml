@@ -20,19 +20,19 @@
 
                 <GridPane styleClass="gridPane">
                     <children>
-                        <Label text="%tab.projects.export.form.filename.label" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                        <Label text="%tab.projects.export.form.filename.label" wrapText="true" GridPane.columnIndex="0" GridPane.rowIndex="0" />
                         <Button fx:id="filenameButton" onAction="#openFileDialog" text="Choose file" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-                        <Label text="%tab.projects.export.form.separator.label" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                        <Label text="%tab.projects.export.form.separator.label" wrapText="true" GridPane.columnIndex="0" GridPane.rowIndex="1" />
                         <TextField fx:id="separator" maxWidth="25" text="," GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-                        <Label text="%tab.projects.export.form.quote.label" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                        <Label text="%tab.projects.export.form.quote.label" wrapText="true" GridPane.columnIndex="0" GridPane.rowIndex="2" />
                         <TextField fx:id="quote" maxWidth="25" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
-                        <Label text="%tab.projects.export.form.lineend.label" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                        <Label text="%tab.projects.export.form.lineend.label" wrapText="true" GridPane.columnIndex="0" GridPane.rowIndex="3" />
                         <TextField fx:id="lineEnd" maxWidth="40" text="\\n" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
-                        <Label text="%tab.projects.export.form.escape.label" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                        <Label text="%tab.projects.export.form.escape.label" wrapText="true" GridPane.columnIndex="0" GridPane.rowIndex="4" />
                         <TextField fx:id="escape" maxWidth="25" GridPane.columnIndex="1" GridPane.rowIndex="4" />
 
                         <Button fx:id="exportButton" disable="true" onAction="#exportFile" text="%tab.projects.button.export" GridPane.columnIndex="1" GridPane.rowIndex="5" />

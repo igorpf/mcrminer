@@ -1,12 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:id="statisticsScrollPane" prefHeight="768.0" prefWidth="272.0" styleClass="vBox"
       fx:controller="com.mcrminer.ui.controller.ProjectsTabStatisticsController">
     <children>
         <Label text="%tab.projects.statistics.title" />
+
+        <GridPane styleClass="gridPane">
+            <children>
+
+                <Label wrapText="true" text="%tab.projects.statistics.changedLinesOfCode" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <Label wrapText="true" fx:id="changedLinesOfCode"  GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                <Label wrapText="true" text="%tab.projects.statistics.reviewers" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                <Label wrapText="true" fx:id="reviewers" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                <Label wrapText="true" text="%tab.projects.statistics.reviews" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                <Label wrapText="true" fx:id="reviews"  GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                <Label wrapText="true" text="%tab.projects.statistics.comments" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                <Label wrapText="true" fx:id="comments" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                <Label wrapText="true" text="%tab.projects.statistics.changedFiles" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                <Label wrapText="true" fx:id="changedFiles" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+                <Label wrapText="true" text="%tab.projects.statistics.commentsPerReview" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                <Label wrapText="true" fx:id="commentsPerReview"  GridPane.columnIndex="1" GridPane.rowIndex="5" />
+
+                <Label wrapText="true" text="%tab.projects.statistics.averageReviewTimeInMinutes" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+                <Label wrapText="true" fx:id="averageReviewTimeInMinutes" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+
+                <Label wrapText="true" text="%tab.projects.statistics.commentedFilesPercentage" GridPane.columnIndex="0" GridPane.rowIndex="7" />
+                <Label wrapText="true" fx:id="commentedFilesPercentage"  GridPane.columnIndex="1" GridPane.rowIndex="7" />
+
+                <Label wrapText="true" text="%tab.projects.statistics.averageCommentSize" GridPane.columnIndex="0" GridPane.rowIndex="8" />
+                <Label wrapText="true" fx:id="averageCommentSize" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+
+            </children>
+            <columnConstraints>
+                <ColumnConstraints />
+                <ColumnConstraints />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+            </rowConstraints>
+        </GridPane>
     </children>
 </VBox>
