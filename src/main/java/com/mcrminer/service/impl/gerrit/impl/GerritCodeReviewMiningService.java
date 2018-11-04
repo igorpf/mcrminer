@@ -73,7 +73,7 @@ public class GerritCodeReviewMiningService extends AbstractCodeReviewMiningServi
     @Override
     protected List<ReviewRequest> getReviewRequestsForProject(Project project, Pageable pageRequest, AuthenticationData authData) {
         return fetchObjectHandlingException(() -> {
-            LOG.info("Fetching review requests for project {}, pageSize {}, page {}", project.getId(), pageRequest.getPageSize(), pageRequest.getPageNumber());
+            LOG.info("Fetching review requests for project {}, pageSize {}, page {}", project, pageRequest.getPageSize(), pageRequest.getPageNumber());
             GerritApi api = getGerritApi(authData);
             String projectQuery = String.format(PROJECT_QUERY, project.getCodeReviewToolId());
             List<ChangeInfo> changes = api.changes().query(projectQuery)
