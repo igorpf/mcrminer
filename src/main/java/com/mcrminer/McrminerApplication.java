@@ -10,6 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Lazy;
 
 import java.util.ResourceBundle;
+import java.util.Locale;
 
 @Lazy
 @SpringBootApplication
@@ -27,9 +28,9 @@ public class McrminerApplication extends AbstractJavaFxApplicationSupport {
 		notifyPreloader(new Preloader.StateChangeNotification(Preloader.StateChangeNotification.Type.BEFORE_START));
 		stage.setTitle(windowTitle);
 		FXMLLoader loader = new FXMLLoader();
-		loader.setLocation(getClass().getClassLoader().getResource("views/MainWindow.fxml"));
+		loader.setLocation(getClass().getClassLoader().getResource("views/mainWindow.fxml"));
 		loader.setControllerFactory(clazz -> getApplicationContext().getBean(clazz));
-		loader.setResources(ResourceBundle.getBundle("bundles.messages"));
+		loader.setResources(ResourceBundle.getBundle("bundles.messages",  Locale.ENGLISH));
 		Scene scene = new Scene(loader.load());
 		scene.getStylesheets().add(getClass().getClassLoader().getResource("css/mainWindow.css").toExternalForm());
 		stage.setScene(scene);

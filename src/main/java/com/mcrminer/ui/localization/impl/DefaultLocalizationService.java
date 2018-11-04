@@ -13,7 +13,7 @@ public class DefaultLocalizationService implements LocalizationService {
     private final ResourceBundle BUNDLE;
 
     public DefaultLocalizationService() {
-        BUNDLE = ResourceBundle.getBundle("bundles/messages", Locale.getDefault());
+        BUNDLE = ResourceBundle.getBundle("bundles/messages", Locale.ENGLISH);
     }
 
     @Override
