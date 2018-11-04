@@ -42,4 +42,11 @@ public final class Diff extends Reviewable {
     public void setFiles(Collection<File> files) {
         this.files = files;
     }
+
+    @Override
+    public String toString() {
+        return "Diff{" +
+                "reviewRequest=" + reviewRequest +
+                '}';
+    }
 }

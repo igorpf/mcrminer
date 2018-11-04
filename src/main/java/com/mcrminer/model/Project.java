@@ -88,4 +88,12 @@ public final class Project {
 
         return Objects.hash(getId());
     }
+
+    @Override
+    public String toString() {
+        return "Project{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

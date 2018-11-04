@@ -97,4 +97,13 @@ public final class ReviewRequest extends Reviewable {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    @Override
+    public String toString() {
+        return "ReviewRequest{" +
+                "project=" + project +
+                ", branch='" + branch + '\'' +
+                ", commitId='" + commitId + '\'' +
+                '}';
+    }
 }
