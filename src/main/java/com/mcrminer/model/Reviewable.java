@@ -13,7 +13,7 @@ public abstract class Reviewable extends BaseAuditingEntity {
     @GeneratedValue
     private Long id;
 
-    @OneToMany
+    @OneToMany(mappedBy = "reviewed", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Set<Review> reviews = new HashSet<>();
 
     public Long getId() {

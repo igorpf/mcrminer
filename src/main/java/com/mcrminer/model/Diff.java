@@ -1,5 +1,8 @@
 package com.mcrminer.model;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.HashSet;
@@ -17,6 +20,7 @@ public final class Diff extends Reviewable {
 
     @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JoinColumn(name = "DIFF_ID")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Collection<File> files;
 
     public Diff() {

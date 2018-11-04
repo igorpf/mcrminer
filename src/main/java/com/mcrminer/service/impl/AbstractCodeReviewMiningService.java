@@ -6,6 +6,8 @@ import com.mcrminer.repository.*;
 import com.mcrminer.service.AuthenticationData;
 import com.mcrminer.service.CodeReviewMiningService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -22,6 +24,7 @@ public abstract class AbstractCodeReviewMiningService implements CodeReviewMinin
     private FileRepository fileRepository;
     private ReviewRepository reviewRepository;
     private ApprovalStatusRepository approvalStatusRepository;
+    private static final int PAGE_SIZE = 5;
 
     @Override
     public Project fetchProject(String projectId, AuthenticationData authData) {
@@ -29,13 +32,18 @@ public abstract class AbstractCodeReviewMiningService implements CodeReviewMinin
         if (projectRepository.existsByNameAndUrlPath(project.getName(), project.getUrlPath()))
             throw new ProjectAlreadyImportedException("This project already exists");
         project = projectRepository.save(project);
-        List<ReviewRequest> reviewRequests = getReviewRequestsForProject(project, authData);
-        for (ReviewRequest reviewRequest : reviewRequests) {
-            reviewRequest.setProject(project);
-            saveReviewRequest(reviewRequest, authData);
+        boolean hasMoreData = true;
+        int page = 0;
+        while(hasMoreData) {
+            Pageable pageRequest = PageRequest.of(page++, PAGE_SIZE);
+            List<ReviewRequest> reviewRequests = getReviewRequestsForProject(project, pageRequest, authData);
+            for (ReviewRequest reviewRequest : reviewRequests) {
+                reviewRequest.setProject(project);
+                saveReviewRequest(reviewRequest, authData);
+            }
+            hasMoreData = reviewRequests.size() == pageRequest.getPageSize();
         }
-        project.setReviewRequests(new HashSet<>(reviewRequests));
-        return projectRepository.save(project);
+        return project;
     }
 
     private void saveReviewRequest(ReviewRequest reviewRequest, AuthenticationData authData) {
@@ -99,7 +107,7 @@ public abstract class AbstractCodeReviewMiningService implements CodeReviewMinin
     }
 
     protected abstract Project getProject(String projectId, AuthenticationData authData);
-    protected abstract List<ReviewRequest> getReviewRequestsForProject(Project project, AuthenticationData authData);
+    protected abstract List<ReviewRequest> getReviewRequestsForProject(Project project, Pageable pageRequest, AuthenticationData authData);
     protected abstract List<Diff> getDiffsForReviewRequest(ReviewRequest reviewRequest, AuthenticationData authData);
     protected abstract List<Review> getReviewsForReviewRequest(ReviewRequest reviewRequest, AuthenticationData authData);
 }

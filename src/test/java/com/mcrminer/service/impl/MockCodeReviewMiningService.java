@@ -3,6 +3,7 @@ package com.mcrminer.service.impl;
 import com.mcrminer.model.*;
 import com.mcrminer.repository.*;
 import com.mcrminer.service.AuthenticationData;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -25,7 +26,7 @@ public class MockCodeReviewMiningService extends AbstractCodeReviewMiningService
     }
 
     @Override
-    protected List<ReviewRequest> getReviewRequestsForProject(Project project, AuthenticationData authData) {
+    protected List<ReviewRequest> getReviewRequestsForProject(Project project, Pageable pageable, AuthenticationData authData) {
         ReviewRequest reviewRequest1 = new ReviewRequest();
         ReviewRequest reviewRequest2 = new ReviewRequest();
         return Arrays.asList(reviewRequest1, reviewRequest2);

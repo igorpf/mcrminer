@@ -1,6 +1,8 @@
 package com.mcrminer.model;
 
 import com.mcrminer.model.enums.ReviewRequestStatus;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -18,6 +20,7 @@ public final class ReviewRequest extends Reviewable {
     private User submitter;
     @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JoinColumn(name = "REVIEW_REQUEST_ID")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Diff> diffs;
     @ManyToOne
     private Project project;

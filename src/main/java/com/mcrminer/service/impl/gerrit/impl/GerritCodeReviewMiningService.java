@@ -21,6 +21,7 @@ import com.urswolfer.gerrit.client.rest.GerritRestApiFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -71,14 +72,16 @@ public class GerritCodeReviewMiningService extends AbstractCodeReviewMiningServi
     }
 
     @Override
-    protected List<ReviewRequest> getReviewRequestsForProject(Project project, AuthenticationData authData) {
+    protected List<ReviewRequest> getReviewRequestsForProject(Project project, Pageable pageRequest, AuthenticationData authData) {
         return fetchObjectHandlingException(() -> {
             GerritApi api = getGerritApi(authData);
             String projectQuery = String.format(PROJECT_QUERY, project.getCodeReviewToolId());
-            return modelConverter.reviewRequestsFromChanges(api.changes().query(projectQuery)
+            List<ChangeInfo> changes = api.changes().query(projectQuery)
                     .withOptions(REVIEW_REQUEST_OPTIONS)
-                    .withLimit(QUERY_LIMIT)
-                    .get());
+                    .withLimit(pageRequest.getPageSize())
+                    .withStart(pageRequest.getPageNumber())
+                    .get();
+            return modelConverter.reviewRequestsFromChanges(changes);
         });
     }
 

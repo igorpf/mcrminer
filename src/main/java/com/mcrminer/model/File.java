@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -30,6 +32,7 @@ public final class File {
     private Diff diff;
     @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JoinColumn(name = "FILE_ID")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Collection<Comment> comments;
 
     public File() {
