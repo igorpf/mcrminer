@@ -10,7 +10,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 
 @AllArgsConstructor
@@ -50,21 +49,28 @@ public abstract class AbstractCodeReviewMiningService implements CodeReviewMinin
         if (reviewRequest.getSubmitter() != null)
             userRepository.save(reviewRequest.getSubmitter());
         reviewRequestRepository.save(reviewRequest);
-        List<Diff> diffs = getDiffsForReviewRequest(reviewRequest, authData);
-        for (Diff diff : diffs) {
-            diff.setReviewRequest(reviewRequest);
-            saveDiff(diff);
+        int page = 0;
+        boolean hasMoreData = true;
+        while(hasMoreData) {
+            Pageable pageRequest = PageRequest.of(page++, PAGE_SIZE);
+            List<Diff> diffs = getDiffsForReviewRequest(reviewRequest, pageRequest, authData);
+            for (Diff diff : diffs) {
+                diff.setReviewRequest(reviewRequest);
+                saveDiff(diff);
+            }
+            hasMoreData = diffs.size() == pageRequest.getPageSize();
         }
-        reviewRequest.setDiffs(new HashSet<>(diffs));
-
-        List<Review> reviews = getReviewsForReviewRequest(reviewRequest, authData);
-        for (Review review : reviews) {
-            review.setReviewed(reviewRequest);
-            saveReview(review);
+        hasMoreData = true;
+        page = 0;
+        while(hasMoreData) {
+            Pageable pageRequest = PageRequest.of(page++, PAGE_SIZE);
+            List<Review> reviews = getReviewsForReviewRequest(reviewRequest, pageRequest, authData);
+            for (Review review : reviews) {
+                review.setReviewed(reviewRequest);
+                saveReview(review);
+            }
+            hasMoreData = reviews.size() == pageRequest.getPageSize();
         }
-        reviewRequest.setReviews(new HashSet<>(reviews));
-
-        reviewRequestRepository.save(reviewRequest);
     }
 
     private void saveDiff(Diff diff) {
@@ -108,6 +114,6 @@ public abstract class AbstractCodeReviewMiningService implements CodeReviewMinin
 
     protected abstract Project getProject(String projectId, AuthenticationData authData);
     protected abstract List<ReviewRequest> getReviewRequestsForProject(Project project, Pageable pageRequest, AuthenticationData authData);
-    protected abstract List<Diff> getDiffsForReviewRequest(ReviewRequest reviewRequest, AuthenticationData authData);
-    protected abstract List<Review> getReviewsForReviewRequest(ReviewRequest reviewRequest, AuthenticationData authData);
+    protected abstract List<Diff> getDiffsForReviewRequest(ReviewRequest reviewRequest, Pageable pageRequest, AuthenticationData authData);
+    protected abstract List<Review> getReviewsForReviewRequest(ReviewRequest reviewRequest, Pageable pageRequest, AuthenticationData authData);
 }

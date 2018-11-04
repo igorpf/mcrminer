@@ -46,7 +46,6 @@ public class GerritCodeReviewMiningService extends AbstractCodeReviewMiningServi
             ListChangesOption.ALL_FILES,
             ListChangesOption.ALL_REVISIONS
     };
-    private static final int QUERY_LIMIT = 5;
 
     private GerritApiModelConverter modelConverter;
 
@@ -74,6 +73,7 @@ public class GerritCodeReviewMiningService extends AbstractCodeReviewMiningServi
     @Override
     protected List<ReviewRequest> getReviewRequestsForProject(Project project, Pageable pageRequest, AuthenticationData authData) {
         return fetchObjectHandlingException(() -> {
+            LOG.info("Fetching review requests for project {}, pageSize {}, page {}", project.getId(), pageRequest.getPageSize(), pageRequest.getPageNumber());
             GerritApi api = getGerritApi(authData);
             String projectQuery = String.format(PROJECT_QUERY, project.getCodeReviewToolId());
             List<ChangeInfo> changes = api.changes().query(projectQuery)
@@ -86,13 +86,15 @@ public class GerritCodeReviewMiningService extends AbstractCodeReviewMiningServi
     }
 
     @Override
-    protected List<Diff> getDiffsForReviewRequest(ReviewRequest reviewRequest, AuthenticationData authData) {
+    protected List<Diff> getDiffsForReviewRequest(ReviewRequest reviewRequest, Pageable pageRequest, AuthenticationData authData) {
         return fetchObjectHandlingException(() -> {
+            LOG.info("Fetching review requests for project {}, pageSize {}, page {}", reviewRequest.getProject().getId(), pageRequest.getPageSize(), pageRequest.getPageNumber());
             GerritApi api = getGerritApi(authData);
             String projectQuery = String.format(PROJECT_QUERY, reviewRequest.getProject().getCodeReviewToolId());
             List<ChangeInfo> changes = api.changes().query(projectQuery)
                     .withOptions(DIFF_OPTIONS)
-                    .withLimit(QUERY_LIMIT)
+                    .withLimit(pageRequest.getPageSize())
+                    .withStart(pageRequest.getPageNumber())
                     .get();
             Map<ChangeInfo, Map<String, List<CommentInfo>>> changeInfoCommentsMap = new HashMap<>();
             for (ChangeInfo change : changes) {
@@ -106,13 +108,15 @@ public class GerritCodeReviewMiningService extends AbstractCodeReviewMiningServi
     }
 
     @Override
-    protected List<Review> getReviewsForReviewRequest(ReviewRequest reviewRequest, AuthenticationData authData) {
+    protected List<Review> getReviewsForReviewRequest(ReviewRequest reviewRequest, Pageable pageRequest, AuthenticationData authData) {
         return fetchObjectHandlingException(() -> {
+            LOG.info("Fetching review requests for project {}, pageSize {}, page {}", reviewRequest.getProject().getId(), pageRequest.getPageSize(), pageRequest.getPageNumber());
             GerritApi api = getGerritApi(authData);
             String projectQuery = String.format(PROJECT_QUERY, reviewRequest.getProject().getCodeReviewToolId());
             return modelConverter.reviewsFromChanges(api.changes().query(projectQuery)
                     .withOptions(REVIEW_OPTIONS)
-                    .withLimit(QUERY_LIMIT)
+                    .withLimit(pageRequest.getPageSize())
+                    .withStart(pageRequest.getPageNumber())
                     .get());
         });
     }

@@ -33,7 +33,7 @@ public class MockCodeReviewMiningService extends AbstractCodeReviewMiningService
     }
 
     @Override
-    protected List<Diff> getDiffsForReviewRequest(ReviewRequest reviewRequest, AuthenticationData authData) {
+    protected List<Diff> getDiffsForReviewRequest(ReviewRequest reviewRequest, Pageable pageRequest, AuthenticationData authData) {
         User user = new User();
         user.setEmail("user@example.com");
         Comment comment1 = new Comment();
@@ -52,7 +52,7 @@ public class MockCodeReviewMiningService extends AbstractCodeReviewMiningService
     }
 
     @Override
-    protected List<Review> getReviewsForReviewRequest(ReviewRequest reviewRequest, AuthenticationData authData) {
+    protected List<Review> getReviewsForReviewRequest(ReviewRequest reviewRequest, Pageable pageRequest, AuthenticationData authData) {
         User user = new User();
         user.setEmail("someuser@email.com");
         ApprovalStatus status = new ApprovalStatus();
