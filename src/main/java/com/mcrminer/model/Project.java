@@ -1,5 +1,8 @@
 package com.mcrminer.model;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Objects;
@@ -25,6 +28,7 @@ public final class Project {
 
     @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JoinColumn(name = "PROJECT_ID")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<ReviewRequest> reviewRequests;
 
     public Project() {

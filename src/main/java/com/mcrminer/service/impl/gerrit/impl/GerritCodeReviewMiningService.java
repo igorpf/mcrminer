@@ -21,6 +21,7 @@ import com.urswolfer.gerrit.client.rest.GerritRestApiFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -45,7 +46,6 @@ public class GerritCodeReviewMiningService extends AbstractCodeReviewMiningServi
             ListChangesOption.ALL_FILES,
             ListChangesOption.ALL_REVISIONS
     };
-    private static final int QUERY_LIMIT = 5;
 
     private GerritApiModelConverter modelConverter;
 
@@ -71,25 +71,30 @@ public class GerritCodeReviewMiningService extends AbstractCodeReviewMiningServi
     }
 
     @Override
-    protected List<ReviewRequest> getReviewRequestsForProject(Project project, AuthenticationData authData) {
+    protected List<ReviewRequest> getReviewRequestsForProject(Project project, Pageable pageRequest, AuthenticationData authData) {
         return fetchObjectHandlingException(() -> {
+            LOG.info("Fetching review requests for project {}, pageSize {}, page {}", project.getId(), pageRequest.getPageSize(), pageRequest.getPageNumber());
             GerritApi api = getGerritApi(authData);
             String projectQuery = String.format(PROJECT_QUERY, project.getCodeReviewToolId());
-            return modelConverter.reviewRequestsFromChanges(api.changes().query(projectQuery)
+            List<ChangeInfo> changes = api.changes().query(projectQuery)
                     .withOptions(REVIEW_REQUEST_OPTIONS)
-                    .withLimit(QUERY_LIMIT)
-                    .get());
+                    .withLimit(pageRequest.getPageSize())
+                    .withStart(pageRequest.getPageNumber())
+                    .get();
+            return modelConverter.reviewRequestsFromChanges(changes);
         });
     }
 
     @Override
-    protected List<Diff> getDiffsForReviewRequest(ReviewRequest reviewRequest, AuthenticationData authData) {
+    protected List<Diff> getDiffsForReviewRequest(ReviewRequest reviewRequest, Pageable pageRequest, AuthenticationData authData) {
         return fetchObjectHandlingException(() -> {
+            LOG.info("Fetching review requests for project {}, pageSize {}, page {}", reviewRequest.getProject().getId(), pageRequest.getPageSize(), pageRequest.getPageNumber());
             GerritApi api = getGerritApi(authData);
             String projectQuery = String.format(PROJECT_QUERY, reviewRequest.getProject().getCodeReviewToolId());
             List<ChangeInfo> changes = api.changes().query(projectQuery)
                     .withOptions(DIFF_OPTIONS)
-                    .withLimit(QUERY_LIMIT)
+                    .withLimit(pageRequest.getPageSize())
+                    .withStart(pageRequest.getPageNumber())
                     .get();
             Map<ChangeInfo, Map<String, List<CommentInfo>>> changeInfoCommentsMap = new HashMap<>();
             for (ChangeInfo change : changes) {
@@ -103,13 +108,15 @@ public class GerritCodeReviewMiningService extends AbstractCodeReviewMiningServi
     }
 
     @Override
-    protected List<Review> getReviewsForReviewRequest(ReviewRequest reviewRequest, AuthenticationData authData) {
+    protected List<Review> getReviewsForReviewRequest(ReviewRequest reviewRequest, Pageable pageRequest, AuthenticationData authData) {
         return fetchObjectHandlingException(() -> {
+            LOG.info("Fetching review requests for project {}, pageSize {}, page {}", reviewRequest.getProject().getId(), pageRequest.getPageSize(), pageRequest.getPageNumber());
             GerritApi api = getGerritApi(authData);
             String projectQuery = String.format(PROJECT_QUERY, reviewRequest.getProject().getCodeReviewToolId());
             return modelConverter.reviewsFromChanges(api.changes().query(projectQuery)
                     .withOptions(REVIEW_OPTIONS)
-                    .withLimit(QUERY_LIMIT)
+                    .withLimit(pageRequest.getPageSize())
+                    .withStart(pageRequest.getPageNumber())
                     .get());
         });
     }
