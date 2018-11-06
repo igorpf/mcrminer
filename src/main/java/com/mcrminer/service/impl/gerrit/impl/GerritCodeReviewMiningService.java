@@ -35,6 +35,7 @@ public class GerritCodeReviewMiningService extends AbstractCodeReviewMiningServi
     private static final Logger LOG = LoggerFactory.getLogger(GerritCodeReviewMiningService.class);
     private static final String PROJECT_URL_FORMAT = "%s/%s";
     private static final String PROJECT_QUERY = "project:%s";
+    private static final int MAX_RETRIES = 20;
     private static final ListChangesOption[] REVIEW_REQUEST_OPTIONS = {
             ListChangesOption.DETAILED_ACCOUNTS
     };
@@ -122,12 +123,18 @@ public class GerritCodeReviewMiningService extends AbstractCodeReviewMiningServi
     }
 
     private <T> T fetchObjectHandlingException(ApiSupplier<T> supplier) {
-        try {
-            return supplier.get();
-        } catch (RestApiException restApiException) {
-            LOG.error("Error connecting to Gerrit API", restApiException);
-            throw new ClientApiException(restApiException);
+        int retryCounter = MAX_RETRIES;
+        while (retryCounter-- > 0) {
+            try {
+                return supplier.get();
+            } catch (RestApiException restApiException) {
+                LOG.error("Error connecting to Gerrit REST API, retries left: {}", retryCounter);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Exception details", restApiException);
+                }
+            }
         }
+        throw new ClientApiException("Error connecting to Gerrit REST API");
     }
 
     private GerritApi getGerritApi(AuthenticationData authData) {
