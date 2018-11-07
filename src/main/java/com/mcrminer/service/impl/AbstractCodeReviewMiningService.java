@@ -23,7 +23,8 @@ public abstract class AbstractCodeReviewMiningService implements CodeReviewMinin
     private FileRepository fileRepository;
     private ReviewRepository reviewRepository;
     private ApprovalStatusRepository approvalStatusRepository;
-    private static final int PAGE_SIZE = 5;
+    private static final int REVIEW_REQUESTS_PAGE_SIZE = 100;
+    private static final int DEFAULT_PAGE_SIZE = 5;
 
     @Override
     public Project fetchProject(String projectId, AuthenticationData authData) {
@@ -34,7 +35,7 @@ public abstract class AbstractCodeReviewMiningService implements CodeReviewMinin
         boolean hasMoreData = true;
         int page = 0;
         while(hasMoreData) {
-            Pageable pageRequest = PageRequest.of(page++, PAGE_SIZE);
+            Pageable pageRequest = PageRequest.of(page++, REVIEW_REQUESTS_PAGE_SIZE);
             List<ReviewRequest> reviewRequests = getReviewRequestsForProject(project, pageRequest, authData);
             for (ReviewRequest reviewRequest : reviewRequests) {
                 reviewRequest.setProject(project);
@@ -52,7 +53,7 @@ public abstract class AbstractCodeReviewMiningService implements CodeReviewMinin
         int page = 0;
         boolean hasMoreData = true;
         while(hasMoreData) {
-            Pageable pageRequest = PageRequest.of(page++, PAGE_SIZE);
+            Pageable pageRequest = PageRequest.of(page++, DEFAULT_PAGE_SIZE);
             List<Diff> diffs = getDiffsForReviewRequest(reviewRequest, pageRequest, authData);
             for (Diff diff : diffs) {
                 diff.setReviewRequest(reviewRequest);
@@ -63,7 +64,7 @@ public abstract class AbstractCodeReviewMiningService implements CodeReviewMinin
         hasMoreData = true;
         page = 0;
         while(hasMoreData) {
-            Pageable pageRequest = PageRequest.of(page++, PAGE_SIZE);
+            Pageable pageRequest = PageRequest.of(page++, DEFAULT_PAGE_SIZE);
             List<Review> reviews = getReviewsForReviewRequest(reviewRequest, pageRequest, authData);
             for (Review review : reviews) {
                 review.setReviewed(reviewRequest);

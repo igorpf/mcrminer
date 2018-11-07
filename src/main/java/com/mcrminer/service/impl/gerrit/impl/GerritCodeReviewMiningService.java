@@ -79,7 +79,7 @@ public class GerritCodeReviewMiningService extends AbstractCodeReviewMiningServi
             List<ChangeInfo> changes = api.changes().query(projectQuery)
                     .withOptions(REVIEW_REQUEST_OPTIONS)
                     .withLimit(pageRequest.getPageSize())
-                    .withStart(pageRequest.getPageNumber())
+                    .withStart(pageRequest.getPageNumber() * pageRequest.getPageSize())
                     .get();
             return modelConverter.reviewRequestsFromChanges(changes);
         });
@@ -94,7 +94,7 @@ public class GerritCodeReviewMiningService extends AbstractCodeReviewMiningServi
             List<ChangeInfo> changes = api.changes().query(projectQuery)
                     .withOptions(DIFF_OPTIONS)
                     .withLimit(pageRequest.getPageSize())
-                    .withStart(pageRequest.getPageNumber())
+                    .withStart(pageRequest.getPageNumber() * pageRequest.getPageSize())
                     .get();
             Map<ChangeInfo, Map<String, List<CommentInfo>>> changeInfoCommentsMap = new HashMap<>();
             for (ChangeInfo change : changes) {
@@ -116,7 +116,7 @@ public class GerritCodeReviewMiningService extends AbstractCodeReviewMiningServi
             return modelConverter.reviewsFromChanges(api.changes().query(projectQuery)
                     .withOptions(REVIEW_OPTIONS)
                     .withLimit(pageRequest.getPageSize())
-                    .withStart(pageRequest.getPageNumber())
+                    .withStart(pageRequest.getPageNumber() * pageRequest.getPageSize())
                     .get());
         });
     }
