@@ -13,24 +13,32 @@ import com.mcrminer.model.Project;
 import com.mcrminer.ui.Selectable;
 import com.mcrminer.ui.localization.LocalizationService;
 import com.mcrminer.ui.perspectives.PerspectiveChoice;
+import com.mcrminer.ui.tasks.ExportPerspectiveTask;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 @Component
 public class ProjectsTabExportController {
 
+    private static final Logger LOG = LoggerFactory.getLogger(ProjectsTabExportController.class);
     private final LocalizationService localizationService;
     private final PerspectiveExportService perspectiveExportService;
 
@@ -75,8 +83,25 @@ public class ProjectsTabExportController {
     }
 
     public void exportFile() {
-        PerspectiveExportConfigurationParameters params = getExportParams();
-        perspectiveExportService.exportPerspective(params);
+        ExportPerspectiveTask task = new ExportPerspectiveTask(perspectiveExportService, getExportParams());
+        final Instant now = Instant.now();
+        exportButton.setDisable(true);
+
+        task.setOnSucceeded((succeedEvent) -> {
+            long totalNs = Duration.between(now, Instant.now()).getNano();
+            LOG.info("Succeeded exporting project statistics. Total time: {} ms", totalNs/1000000);
+            exportButton.setDisable(false);
+        });
+
+        task.setOnFailed((failedEvent) -> {
+            LOG.error("Error exporting perspective", failedEvent.getSource().getException());
+            exportButton.setDisable(false);
+        });
+
+        ExecutorService executorService
+                = Executors.newFixedThreadPool(1);
+        executorService.execute(task);
+        executorService.shutdown();
     }
 
     private PerspectiveExportConfigurationParameters getExportParams() {

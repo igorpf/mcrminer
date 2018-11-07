@@ -46,7 +46,7 @@ public class ProjectsTabStatisticsController {
 
         task.setOnSucceeded((succeedEvent) -> {
             long totalNs = Duration.between(now, Instant.now()).getNano();
-            LOG.info("Succeeded calculating project statistics. Total time in ms: " + totalNs/1000000);
+            LOG.info("Succeeded calculating project statistics. Total time: {} ms", totalNs/1000000);
             ProjectStatistics projectStatistics = (ProjectStatistics) succeedEvent.getSource().getValue();
             LOG.info("Project statistics: " + projectStatistics);
             fillProjectStatistics(projectStatistics);
