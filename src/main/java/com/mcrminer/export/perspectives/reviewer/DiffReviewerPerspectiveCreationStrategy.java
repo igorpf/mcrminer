@@ -1,7 +1,13 @@
 package com.mcrminer.export.perspectives.reviewer;
 
 import com.mcrminer.export.PerspectiveCreationStrategy;
-import com.mcrminer.model.*;
+import com.mcrminer.model.File;
+import com.mcrminer.model.Review;
+import com.mcrminer.model.ReviewRequest;
+import com.mcrminer.model.User;
+import com.mcrminer.repository.FileRepository;
+import com.mcrminer.repository.ReviewRequestRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,13 +18,24 @@ import java.util.stream.Collectors;
 @Service
 public class DiffReviewerPerspectiveCreationStrategy implements PerspectiveCreationStrategy<User, ReviewerPerspective> {
 
+    private final ReviewRequestRepository reviewRequestRepository;
+    private final FileRepository fileRepository;
+
+    @Autowired
+    public DiffReviewerPerspectiveCreationStrategy(ReviewRequestRepository reviewRequestRepository, FileRepository fileRepository) {
+        this.reviewRequestRepository = reviewRequestRepository;
+        this.fileRepository = fileRepository;
+    }
+
     @Override
     @Transactional
     public void fillPerspective(User reviewer, ReviewerPerspective perspective) {
-        reviewer.getReviewRequests().stream().map(ReviewRequest::getDiffs)
+        List<ReviewRequest> reviewRequests = reviewRequestRepository.findAllBySubmitterEmail(reviewer.getEmail());
+        reviewRequests.stream().map(ReviewRequest::getDiffs)
                 .flatMap(Collection::stream)
                 .forEach(diff -> {
-                    long comments = diff.getFiles().stream().map(File::getComments)
+                    List<File> diffFiles = fileRepository.findAllByDiffId(diff.getId());
+                    long comments = diffFiles.stream().map(File::getComments)
                             .flatMap(Collection::stream)
                             .filter(comment -> comment.getAuthor().equals(reviewer))
                             .count();

@@ -2,13 +2,21 @@ package com.mcrminer.export.perspectives.reviewable;
 
 import com.mcrminer.export.PerspectiveCreationStrategy;
 import com.mcrminer.model.*;
+import com.mcrminer.repository.FileRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 @Service
 public class ReviewRequestReviewablePerspectiveCreationStrategy implements PerspectiveCreationStrategy<Reviewable, ReviewablePerspective> {
+
+    private final FileRepository fileRepository;
+
+    @Autowired
+    public ReviewRequestReviewablePerspectiveCreationStrategy(FileRepository fileRepository) {
+        this.fileRepository = fileRepository;
+    }
 
     @Override
     public void fillPerspective(Reviewable rootEntity, ReviewablePerspective perspective) {
@@ -35,7 +43,7 @@ public class ReviewRequestReviewablePerspectiveCreationStrategy implements Persp
     }
 
     private void fillFileAttributes(ReviewablePerspective perspective, ReviewRequest reviewRequest) {
-        Collection<File> files = reviewRequest.getDiffs().stream().map(Diff::getFiles).flatMap(Collection::stream).collect(Collectors.toList());
+        Collection<File> files = fileRepository.findAllByDiffReviewRequestId(reviewRequest.getId());
         perspective.setFiles((long) files.size());
         perspective.setComments(
                 (long) files.stream().map(file -> file.getComments().size()).reduce(Integer::sum).orElse(0)

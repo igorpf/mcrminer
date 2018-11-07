@@ -11,4 +11,7 @@ public interface ReviewRequestRepository extends JpaRepository<ReviewRequest, Lo
     @EntityGraph(value = "reviewRequestWithReviews", type = EntityGraph.EntityGraphType.FETCH)
     List<ReviewRequest> findAllByProjectId(Long projectId);
 
+    @EntityGraph(value = "reviewRequestWithDiffs", type = EntityGraph.EntityGraphType.FETCH)
+    List<ReviewRequest> findAllBySubmitterEmail(String email);
+
 }

@@ -2,6 +2,8 @@ package com.mcrminer.export.perspectives.reviewable;
 
 import com.mcrminer.export.PerspectiveCreationStrategy;
 import com.mcrminer.model.*;
+import com.mcrminer.repository.FileRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -9,6 +11,13 @@ import java.util.Collection;
 
 @Service
 public class DiffReviewablePerspectiveCreationStrategy implements PerspectiveCreationStrategy<Reviewable, ReviewablePerspective> {
+
+    private final FileRepository fileRepository;
+
+    @Autowired
+    public DiffReviewablePerspectiveCreationStrategy(FileRepository fileRepository) {
+        this.fileRepository = fileRepository;
+    }
 
     @Transactional
     @Override
@@ -37,7 +46,7 @@ public class DiffReviewablePerspectiveCreationStrategy implements PerspectiveCre
     }
 
     private void fillFileAttributes(ReviewablePerspective perspective, Diff diff) {
-        Collection<File> files = diff.getFiles();
+        Collection<File> files = fileRepository.findAllByDiffId(diff.getId());
         perspective.setFiles((long) files.size());
         perspective.setComments(
                 (long) files.stream().map(file -> file.getComments().size()).reduce(Integer::sum).orElse(0)

@@ -10,4 +10,6 @@ public interface DiffRepository extends JpaRepository<Diff, Long> {
 
     @EntityGraph(value = "diffWithReviews", type = EntityGraph.EntityGraphType.FETCH)
     List<Diff> findAllByReviewRequestProjectId(Long projectId);
+
+    List<Diff> findAllByReviewRequestId(Long reviewRequestId);
 }
