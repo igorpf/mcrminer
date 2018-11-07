@@ -10,4 +10,10 @@ public interface FileRepository extends JpaRepository<File, Long> {
 
     @EntityGraph(value = "withComments", type = EntityGraph.EntityGraphType.FETCH)
     List<File> findAllByDiffReviewRequestProjectId(Long projectId);
+
+    @EntityGraph(value = "withComments", type = EntityGraph.EntityGraphType.FETCH)
+    List<File> findAllByDiffId(Long diffId);
+
+    @EntityGraph(value = "withComments", type = EntityGraph.EntityGraphType.FETCH)
+    List<File> findAllByDiffReviewRequestId(Long reviewRequestId);
 }

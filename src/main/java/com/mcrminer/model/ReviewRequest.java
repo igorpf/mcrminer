@@ -12,6 +12,9 @@ import java.util.Set;
 @NamedEntityGraphs({
         @NamedEntityGraph(name = "reviewRequestWithReviews", attributeNodes = {
                 @NamedAttributeNode("reviews")
+        }),
+        @NamedEntityGraph(name = "reviewRequestWithDiffs", attributeNodes = {
+                @NamedAttributeNode("diffs")
         })
 })
 public final class ReviewRequest extends Reviewable {

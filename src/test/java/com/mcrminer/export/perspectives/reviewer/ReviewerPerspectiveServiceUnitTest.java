@@ -1,6 +1,10 @@
 package com.mcrminer.export.perspectives.reviewer;
 
 import com.mcrminer.model.*;
+import com.mcrminer.repository.DiffRepository;
+import com.mcrminer.repository.FileRepository;
+import com.mcrminer.repository.ReviewRepository;
+import com.mcrminer.repository.ReviewRequestRepository;
 import com.mcrminer.repository.factory.DomainObjectsFactory;
 import com.mcrminer.repository.factory.impl.TransientObjectsFactory;
 import org.junit.Before;
@@ -9,7 +13,8 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.Collections;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
 
 public class ReviewerPerspectiveServiceUnitTest {
 
@@ -18,13 +23,17 @@ public class ReviewerPerspectiveServiceUnitTest {
     private Diff diff;
     private ReviewRequest reviewRequest;
     private User author;
+    private ReviewRequestRepository reviewRequestRepository = mock(ReviewRequestRepository.class);
+    private FileRepository fileRepository = mock(FileRepository.class);
+    private ReviewRepository reviewRepository = mock(ReviewRepository.class);
+    private DiffRepository diffRepository = mock(DiffRepository.class);
 
     @Before
     public void setUp() throws Exception {
         reviewerPerspectiveService = new ReviewerPerspectiveService(Arrays.asList(
-                new DiffReviewerPerspectiveCreationStrategy(),
+                new DiffReviewerPerspectiveCreationStrategy(reviewRequestRepository, fileRepository),
                 new ReviewerAssociationsPerspectiveCreationStrategy(),
-                new ReviewRequestReviewerPerspectiveCreationStrategy()
+                new ReviewRequestReviewerPerspectiveCreationStrategy(diffRepository, fileRepository, reviewRepository)
         ),null);
         Project project = domainObjectsFactory.createProject("https://localhost", "Localhost project");
         reviewRequest = domainObjectsFactory.createReviewRequest(project);
