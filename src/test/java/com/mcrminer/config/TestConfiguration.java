@@ -1,6 +1,6 @@
 package com.mcrminer.config;
 
-import com.mcrminer.model.ApprovalStatus;
+import com.mcrminer.persistence.model.ApprovalStatus;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;

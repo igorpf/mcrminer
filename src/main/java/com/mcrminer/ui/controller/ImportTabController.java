@@ -1,8 +1,8 @@
 package com.mcrminer.ui.controller;
 
-import com.mcrminer.service.AuthenticationData;
-import com.mcrminer.service.CodeReviewMiningService;
-import com.mcrminer.service.DefaultAuthenticationData;
+import com.mcrminer.mining.service.AuthenticationData;
+import com.mcrminer.mining.service.CodeReviewMiningService;
+import com.mcrminer.mining.service.DefaultAuthenticationData;
 import com.mcrminer.ui.localization.LocalizationService;
 import com.mcrminer.ui.tasks.FetchProjectTask;
 import javafx.collections.FXCollections;

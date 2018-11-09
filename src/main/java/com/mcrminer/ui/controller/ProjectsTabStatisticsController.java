@@ -1,8 +1,8 @@
 package com.mcrminer.ui.controller;
 
-import com.mcrminer.model.Project;
-import com.mcrminer.statistics.StatisticsService;
-import com.mcrminer.statistics.impl.project.ProjectStatistics;
+import com.mcrminer.mining.statistics.StatisticsService;
+import com.mcrminer.mining.statistics.impl.project.ProjectStatistics;
+import com.mcrminer.persistence.model.Project;
 import com.mcrminer.ui.tasks.CalculateProjectStatisticsTask;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

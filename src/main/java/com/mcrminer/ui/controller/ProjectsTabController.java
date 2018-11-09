@@ -1,7 +1,7 @@
 package com.mcrminer.ui.controller;
 
-import com.mcrminer.model.Project;
-import com.mcrminer.repository.ProjectRepository;
+import com.mcrminer.persistence.model.Project;
+import com.mcrminer.persistence.repository.ProjectRepository;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
