@@ -39,10 +39,6 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-data-jpa') {
 		exclude group: 'org.apache.tomcat', module: 'tomcat-jdbc'
 	}
-	compile('org.springframework.boot:spring-boot-starter-security')
-	compile('org.springframework.boot:spring-boot-starter-web')
-	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
-	compile('org.springframework.boot:spring-boot-devtools')
 	compile('com.h2database:h2')
 	compile("com.urswolfer.gerrit.client.rest:gerrit-rest-java-client:${gerritApiVersion}")
     compile('com.zaxxer:HikariCP:2.5.1') {
@@ -61,5 +57,4 @@ dependencies {
 	testApt "org.projectlombok:lombok:${lombokVersion}"
 
 	testCompile('org.springframework.boot:spring-boot-starter-test')
-	testCompile('org.springframework.security:spring-security-test')
 }
