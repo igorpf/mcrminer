@@ -84,4 +84,9 @@ public class MockCodeReviewMiningService extends AbstractCodeReviewMiningService
 
         return Arrays.asList(review, review2, review3);
     }
+
+    @Override
+    public String getToolName() {
+        return "Mock tool";
+    }
 }

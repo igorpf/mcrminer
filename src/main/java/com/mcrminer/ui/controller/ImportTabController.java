@@ -16,19 +16,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 @Component
 public class ImportTabController {
     private static final Logger LOG = LoggerFactory.getLogger(ImportTabController.class);
 
     private LocalizationService localizationService;
-    private CodeReviewMiningService gerritCodeReviewMiningService;
+    private List<CodeReviewMiningService> codeReviewMiningServices;
 
     @FXML
     private TextField projectUrl, projectName, username, password;
@@ -41,17 +41,17 @@ public class ImportTabController {
 
     @FXML
     public void initialize() {
-        MiningServiceChoice gerritChoice = new MiningServiceChoice(gerritCodeReviewMiningService, "Gerrit");
-        miningServiceChoice.setItems(FXCollections.observableList(
-                Collections.singletonList(gerritChoice)
-        ));
-        miningServiceChoice.getSelectionModel().select(gerritChoice);
+        List<MiningServiceChoice> choices = getCodeReviewMiningServices()
+                .stream()
+                .map(MiningServiceChoice::new)
+                .collect(Collectors.toList());
+        miningServiceChoice.setItems(FXCollections.observableList(choices));
+        miningServiceChoice.getSelectionModel().select(0);
     }
 
     public void fetchProject() {
         AuthenticationData auth = new DefaultAuthenticationData(username.getText(), password.getText(), projectUrl.getText());
-        FetchProjectTask task = new FetchProjectTask(getCodeReviewMiningService(), projectName.getText(), auth);
-
+        FetchProjectTask task = new FetchProjectTask(miningServiceChoice.getSelectionModel().getSelectedItem().getCodeReviewMiningService(), projectName.getText(), auth);
 
         final Instant now = Instant.now();
         task.setOnRunning((runningEvent) -> {
@@ -81,6 +81,10 @@ public class ImportTabController {
         return getLocalizationService().getMessage("tab.import.time.total", totalSeconds);
     }
 
+    public List<CodeReviewMiningService> getCodeReviewMiningServices() {
+        return codeReviewMiningServices;
+    }
+
     public LocalizationService getLocalizationService() {
         return localizationService;
     }
@@ -90,13 +94,9 @@ public class ImportTabController {
         this.localizationService = localizationService;
     }
 
-    public CodeReviewMiningService getCodeReviewMiningService() {
-        return miningServiceChoice.getSelectionModel().getSelectedItem().getCodeReviewMiningService();
-    }
-
-    @Resource(name = "gerritCodeReviewMiningService")
-    public void setGerritCodeReviewMiningService(CodeReviewMiningService gerritCodeReviewMiningService) {
-        this.gerritCodeReviewMiningService = gerritCodeReviewMiningService;
+    @Autowired
+    public void setCodeReviewMiningServices(List<CodeReviewMiningService> codeReviewMiningServices) {
+        this.codeReviewMiningServices = codeReviewMiningServices;
     }
 }
 
@@ -104,9 +104,9 @@ class MiningServiceChoice {
     private CodeReviewMiningService codeReviewMiningService;
     private String name;
 
-    MiningServiceChoice(CodeReviewMiningService codeReviewMiningService, String name) {
+    MiningServiceChoice(CodeReviewMiningService codeReviewMiningService) {
         this.codeReviewMiningService = codeReviewMiningService;
-        this.name = name;
+        this.name = codeReviewMiningService.getToolName();
     }
 
     public CodeReviewMiningService getCodeReviewMiningService() {
