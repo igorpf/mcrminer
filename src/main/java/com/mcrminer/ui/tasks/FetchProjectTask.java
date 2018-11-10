@@ -1,8 +1,8 @@
 package com.mcrminer.ui.tasks;
 
-import com.mcrminer.mining.service.AuthenticationData;
-import com.mcrminer.mining.service.CodeReviewMiningService;
 import com.mcrminer.persistence.model.Project;
+import com.mcrminer.service.mining.AuthenticationData;
+import com.mcrminer.service.mining.CodeReviewMiningService;
 import javafx.concurrent.Task;
 
 public class FetchProjectTask extends Task<Project> {

@@ -1,7 +1,7 @@
 package com.mcrminer.ui.tasks;
 
-import com.mcrminer.mining.export.PerspectiveExportConfigurationParameters;
-import com.mcrminer.mining.export.perspectives.PerspectiveExportService;
+import com.mcrminer.service.export.PerspectiveExportConfigurationParameters;
+import com.mcrminer.service.export.perspectives.PerspectiveExportService;
 import javafx.concurrent.Task;
 
 public class ExportPerspectiveTask extends Task<Void> {

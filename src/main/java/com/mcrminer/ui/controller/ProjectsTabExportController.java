@@ -1,15 +1,15 @@
 package com.mcrminer.ui.controller;
 
-import com.mcrminer.mining.export.DefaultPerspectiveExportConfigurationParameters;
-import com.mcrminer.mining.export.PerspectiveExportConfigurationParameters;
-import com.mcrminer.mining.export.perspectives.PerspectiveExportService;
-import com.mcrminer.mining.export.perspectives.author.AuthorPerspective;
-import com.mcrminer.mining.export.perspectives.comment.CommentPerspective;
-import com.mcrminer.mining.export.perspectives.enums.PerspectiveType;
-import com.mcrminer.mining.export.perspectives.file.FilePerspective;
-import com.mcrminer.mining.export.perspectives.reviewable.ReviewablePerspective;
-import com.mcrminer.mining.export.perspectives.reviewer.ReviewerPerspective;
 import com.mcrminer.persistence.model.Project;
+import com.mcrminer.service.export.DefaultPerspectiveExportConfigurationParameters;
+import com.mcrminer.service.export.PerspectiveExportConfigurationParameters;
+import com.mcrminer.service.export.perspectives.PerspectiveExportService;
+import com.mcrminer.service.export.perspectives.author.AuthorPerspective;
+import com.mcrminer.service.export.perspectives.comment.CommentPerspective;
+import com.mcrminer.service.export.perspectives.enums.PerspectiveType;
+import com.mcrminer.service.export.perspectives.file.FilePerspective;
+import com.mcrminer.service.export.perspectives.reviewable.ReviewablePerspective;
+import com.mcrminer.service.export.perspectives.reviewer.ReviewerPerspective;
 import com.mcrminer.ui.Selectable;
 import com.mcrminer.ui.localization.LocalizationService;
 import com.mcrminer.ui.perspectives.PerspectiveChoice;

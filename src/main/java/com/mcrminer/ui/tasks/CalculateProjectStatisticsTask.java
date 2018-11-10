@@ -1,8 +1,8 @@
 package com.mcrminer.ui.tasks;
 
-import com.mcrminer.mining.statistics.StatisticsService;
-import com.mcrminer.mining.statistics.impl.project.ProjectStatistics;
 import com.mcrminer.persistence.model.Project;
+import com.mcrminer.service.statistics.StatisticsService;
+import com.mcrminer.service.statistics.impl.project.ProjectStatistics;
 import javafx.concurrent.Task;
 
 public class CalculateProjectStatisticsTask extends Task<ProjectStatistics> {
