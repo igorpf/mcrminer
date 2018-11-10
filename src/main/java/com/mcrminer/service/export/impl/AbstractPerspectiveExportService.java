@@ -4,7 +4,6 @@ import com.mcrminer.service.export.FileWriterService;
 import com.mcrminer.service.export.PerspectiveExportConfigurationParameters;
 import com.mcrminer.service.export.PerspectiveService;
 import com.mcrminer.service.export.perspectives.PerspectiveExportService;
-import com.mcrminer.service.export.perspectives.enums.PerspectiveType;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,7 @@ public abstract class AbstractPerspectiveExportService implements PerspectiveExp
 
     @Override
     public void exportPerspective(PerspectiveExportConfigurationParameters parameters) {
-        PerspectiveService perspectiveService = getPerspectiveServiceFor(parameters.getPerspectiveType());
+        PerspectiveService perspectiveService = parameters.getPerspectiveType().getPerspectiveService();
         List<Object> rootEntities = perspectiveService.getRootEntitiesForProject(parameters.getProjectId());
         List<Object> perspectives = new ArrayList<>();
         rootEntities.forEach(entity -> {
@@ -39,6 +38,5 @@ public abstract class AbstractPerspectiveExportService implements PerspectiveExp
         this.fileWriterService = fileWriterService;
     }
 
-    protected abstract PerspectiveService<? ,?> getPerspectiveServiceFor(PerspectiveType perspectiveType);
     protected abstract OutputStream getOutputStream(PerspectiveExportConfigurationParameters parameters);
 }
