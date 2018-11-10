@@ -36,3 +36,11 @@
     -fx-background-color: #aa0c00;
     -fx-text-fill: white;
 }
+
+.gridPaneLabel {
+    -fx-text-alignment: right;
+}
+
+.gridPaneInput {
+    -fx-pref-width: 250px;
+}
