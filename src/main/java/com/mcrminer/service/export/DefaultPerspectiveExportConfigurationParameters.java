@@ -1,6 +1,5 @@
 package com.mcrminer.service.export;
 
-import com.mcrminer.service.export.perspectives.enums.PerspectiveType;
 import com.opencsv.CSVWriter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

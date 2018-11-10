@@ -3,13 +3,8 @@ package com.mcrminer.ui.controller;
 import com.mcrminer.persistence.model.Project;
 import com.mcrminer.service.export.DefaultPerspectiveExportConfigurationParameters;
 import com.mcrminer.service.export.PerspectiveExportConfigurationParameters;
+import com.mcrminer.service.export.PerspectiveType;
 import com.mcrminer.service.export.perspectives.PerspectiveExportService;
-import com.mcrminer.service.export.perspectives.author.AuthorPerspective;
-import com.mcrminer.service.export.perspectives.comment.CommentPerspective;
-import com.mcrminer.service.export.perspectives.enums.PerspectiveType;
-import com.mcrminer.service.export.perspectives.file.FilePerspective;
-import com.mcrminer.service.export.perspectives.reviewable.ReviewablePerspective;
-import com.mcrminer.service.export.perspectives.reviewer.ReviewerPerspective;
 import com.mcrminer.ui.Selectable;
 import com.mcrminer.ui.localization.LocalizationService;
 import com.mcrminer.ui.perspectives.PerspectiveChoice;
@@ -41,11 +36,15 @@ public class ProjectsTabExportController {
     private static final Logger LOG = LoggerFactory.getLogger(ProjectsTabExportController.class);
     private final LocalizationService localizationService;
     private final PerspectiveExportService perspectiveExportService;
+    private final List<PerspectiveType> perspectiveTypes;
 
     @Autowired
-    public ProjectsTabExportController(LocalizationService localizationService, PerspectiveExportService perspectiveExportService) {
+    public ProjectsTabExportController(LocalizationService localizationService,
+                                       PerspectiveExportService perspectiveExportService,
+                                       List<PerspectiveType> perspectiveTypes) {
         this.localizationService = localizationService;
         this.perspectiveExportService = perspectiveExportService;
+        this.perspectiveTypes = perspectiveTypes;
     }
 
     @FXML
@@ -145,13 +144,17 @@ public class ProjectsTabExportController {
     }
 
     private void fillPerspectiveChoices() {
-        List<PerspectiveChoice> choices = Arrays.asList(
-                PerspectiveChoice.builder().perspectiveClass(AuthorPerspective.class).perspectiveType(PerspectiveType.AUTHOR).title("tab.projects.export.select.author.title").build(),
-                PerspectiveChoice.builder().perspectiveClass(CommentPerspective.class).perspectiveType(PerspectiveType.COMMENT).title("tab.projects.export.select.comment.title").build(),
-                PerspectiveChoice.builder().perspectiveClass(FilePerspective.class).perspectiveType(PerspectiveType.FILE).title("tab.projects.export.select.file.title").build(),
-                PerspectiveChoice.builder().perspectiveClass(ReviewablePerspective.class).perspectiveType(PerspectiveType.REVIEWABLE).title("tab.projects.export.select.reviewable.title").build(),
-                PerspectiveChoice.builder().perspectiveClass(ReviewerPerspective.class).perspectiveType(PerspectiveType.REVIEWER).title("tab.projects.export.select.reviewer.title").build()
-        );
+        List<PerspectiveChoice> choices = perspectiveTypes
+                .stream()
+                .map(
+                        perspectiveType -> PerspectiveChoice
+                                .builder()
+                                .perspectiveClass(perspectiveType.getPerspectiveClass())
+                                .title(perspectiveType.getTitleLocalizationKey())
+                                .perspectiveType(perspectiveType)
+                                .build()
+                )
+                .collect(Collectors.toList());
         choices.forEach(choice -> choice.setTitle(localizationService.getMessage(choice.getTitle())));
         perspectivesChoiceBox.setItems(FXCollections.observableList(choices));
         perspectivesChoiceBox.getSelectionModel().selectedIndexProperty().addListener(

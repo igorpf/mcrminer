@@ -1,6 +1,6 @@
 package com.mcrminer.ui.perspectives;
 
-import com.mcrminer.service.export.perspectives.enums.PerspectiveType;
+import com.mcrminer.service.export.PerspectiveType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

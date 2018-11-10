@@ -36,6 +36,7 @@ public class GerritCodeReviewMiningService extends AbstractCodeReviewMiningServi
     private static final String PROJECT_URL_FORMAT = "%s/%s";
     private static final String PROJECT_QUERY = "project:%s";
     private static final int MAX_RETRIES = 20;
+    private static final String TOOL_NAME = "Gerrit";
     private static final ListChangesOption[] REVIEW_REQUEST_OPTIONS = {
             ListChangesOption.DETAILED_ACCOUNTS
     };
@@ -143,5 +144,10 @@ public class GerritCodeReviewMiningService extends AbstractCodeReviewMiningServi
 
     private GerritAuthData getGerritAuth(AuthenticationData authData) {
         return new GerritAuthData.Basic(authData.getHost(), authData.getUsername(), authData.getPassword());
+    }
+
+    @Override
+    public String getToolName() {
+        return TOOL_NAME;
     }
 }
