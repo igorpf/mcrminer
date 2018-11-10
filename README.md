@@ -1,6 +1,6 @@
 # MCRMiner
 
-## External ependencies
+## External Dependencies
 
 - [Lombok](https://projectlombok.org/) plugin for your IDE so it can recognize generated methods. You may also need to 
 enable annotation processing on your IDE
