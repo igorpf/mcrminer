@@ -1,6 +1,7 @@
 package com.mcrminer.persistence.repository;
 
 import com.mcrminer.DatabaseTest;
+import com.mcrminer.config.TestConfiguration;
 import com.mcrminer.persistence.model.Project;
 import com.mcrminer.persistence.model.ReviewRequest;
 import com.mcrminer.persistence.repository.factory.DomainObjectsFactory;
@@ -19,7 +20,7 @@ import java.util.stream.Stream;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 
-@SpringBootTest
+@SpringBootTest(classes = {TestConfiguration.class})
 @RunWith(SpringRunner.class)
 @DatabaseTest
 public class UserRepositoryIntegrationTest {

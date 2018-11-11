@@ -1,18 +1,20 @@
 package com.mcrminer.service.export.perspectives.comment;
 
 import com.mcrminer.DatabaseTest;
+import com.mcrminer.config.TestConfiguration;
 import com.mcrminer.persistence.model.Comment;
 import com.mcrminer.persistence.repository.factory.DomainObjectsFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.assertNotNull;
 
-@SpringBootTest
+@SpringBootTest(classes = {TestConfiguration.class})
 @RunWith(SpringRunner.class)
 @DatabaseTest
 public class CommentPerspectiveServiceIntegrationTest {
@@ -33,4 +35,5 @@ public class CommentPerspectiveServiceIntegrationTest {
         CommentPerspective commentPerspective = commentPerspectiveService.createPerspective(comment);
         assertNotNull(commentPerspective);
     }
+
 }

@@ -1,6 +1,7 @@
 package com.mcrminer.service.mining.impl;
 
 import com.mcrminer.DatabaseTest;
+import com.mcrminer.config.TestConfiguration;
 import com.mcrminer.exceptions.ProjectAlreadyImportedException;
 import com.mcrminer.persistence.model.Project;
 import com.mcrminer.persistence.repository.*;
@@ -18,7 +19,7 @@ import javax.annotation.Resource;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 
-@SpringBootTest
+@SpringBootTest(classes = {TestConfiguration.class})
 @RunWith(SpringRunner.class)
 @DatabaseTest
 public class AbstractCodeReviewMiningServiceIntegrationTest {

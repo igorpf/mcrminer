@@ -1,6 +1,7 @@
 package com.mcrminer.persistence.repository;
 
 import com.mcrminer.DatabaseTest;
+import com.mcrminer.config.TestConfiguration;
 import com.mcrminer.persistence.model.ApprovalStatus;
 import com.mcrminer.persistence.model.projections.ApprovalStatusProjection;
 import org.junit.Before;
@@ -17,7 +18,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 
-@SpringBootTest
+@SpringBootTest(classes = {TestConfiguration.class})
 @RunWith(SpringRunner.class)
 @DatabaseTest
 public class ApprovalStatusRepositoryIntegrationTest {
