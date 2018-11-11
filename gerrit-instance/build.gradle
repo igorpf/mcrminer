@@ -19,6 +19,7 @@ buildscript {
 }
 plugins {
     id 'net.ltgt.apt' version '0.10'
+    id "io.spring.dependency-management" version "1.0.5.RELEASE"
 }
 
 apply plugin: 'java'
@@ -28,7 +29,7 @@ apply plugin: 'org.sonarqube'
 apply plugin: 'io.spring.dependency-management'
 
 group = 'com.mcrminer'
-version = '0.0.1-SNAPSHOT'
+version = '1.0'
 sourceCompatibility = 1.8
 
 repositories {
@@ -57,4 +58,15 @@ dependencies {
 	testApt "org.projectlombok:lombok:${lombokVersion}"
 
 	testCompile('org.springframework.boot:spring-boot-starter-test')
+
+	compile project(':mcrminer-framework')
+}
+
+dependencyManagement {
+    imports { mavenBom("org.springframework.boot:spring-boot-dependencies:${springBootVersion}") }
+}
+
+jar {
+    baseName = 'mcrminer'
+    version = "${version}"
 }

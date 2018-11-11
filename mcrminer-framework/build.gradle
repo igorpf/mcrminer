@@ -1,0 +1,70 @@
+buildscript {
+	ext {
+		springBootVersion = '2.0.3.RELEASE'
+        sonarQubePluginVersion = '2.6.2'
+        gerritApiVersion = '0.8.15'
+		controlsFxVersion = '9.0.0'
+		openCsvVersion = '4.2'
+		lombokVersion = '1.18.2'
+	}
+	repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:${sonarQubePluginVersion}"
+	}
+}
+plugins {
+    id 'net.ltgt.apt' version '0.10'
+    id "io.spring.dependency-management" version "1.0.5.RELEASE"
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'org.sonarqube'
+apply plugin: 'io.spring.dependency-management'
+
+group = 'com.mcrminer'
+version = '1.0'
+sourceCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+    compile('org.springframework.boot:spring-boot-starter-data-jpa') {
+		exclude group: 'org.apache.tomcat', module: 'tomcat-jdbc'
+	}
+	compile('com.h2database:h2')
+	compile("com.urswolfer.gerrit.client.rest:gerrit-rest-java-client:${gerritApiVersion}")
+    compile('com.zaxxer:HikariCP:2.5.1') {
+        exclude group: 'org.hibernate', module: 'hibernate-core'
+    }
+    compile('org.hibernate:hibernate-hikaricp:5.2.11.Final') {
+        exclude group: 'com.zaxxer', module: 'HikariCP'
+        exclude group: 'org.hibernate', module: 'hibernate-core'
+    }
+	compile("org.controlsfx:controlsfx:${controlsFxVersion}")
+	compile("com.opencsv:opencsv:${openCsvVersion}")
+
+	compileOnly "org.projectlombok:lombok:${lombokVersion}"
+	apt "org.projectlombok:lombok:${lombokVersion}"
+	testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
+	testApt "org.projectlombok:lombok:${lombokVersion}"
+
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+}
+
+dependencyManagement {
+    imports { mavenBom("org.springframework.boot:spring-boot-dependencies:${springBootVersion}") }
+}
+
+jar {
+    baseName = 'mcrminer'
+    version = "${version}"
+}
