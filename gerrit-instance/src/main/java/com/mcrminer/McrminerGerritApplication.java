@@ -6,10 +6,10 @@ import org.springframework.context.annotation.Lazy;
 
 @Lazy
 @SpringBootApplication
-public class McrminerApplication extends AbstractJavaFxApplicationSupport {
+public class McrminerGerritApplication extends AbstractJavaFxApplicationSupport {
 
 	public static void main(String[] args) {
-		launchApp(McrminerApplication.class, args);
+		launchApp(McrminerGerritApplication.class, args);
 	}
 
 }
