@@ -1,0 +1,14 @@
+version: "3.7"
+services:
+  workspace:
+    build:
+      context: .docker/workspace
+    volumes:
+      - .:/usr/src/mcrminer
+    environment:
+      DISPLAY: localhost:0
+    entrypoint: ["sh", "-c"]
+    command: ["
+      tail -f /dev/null
+    "]
+
